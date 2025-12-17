@@ -12,6 +12,7 @@ namespace IKYonetim.BLL
         {
             return _depo.DepartmanlariGetir();
         }
+
     }
 
 }
