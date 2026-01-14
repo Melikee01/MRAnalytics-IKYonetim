@@ -14,6 +14,7 @@ namespace IKYonetim.UI
         private int _seciliMaasId = 0;
 
 
+
         public MaasHesaplamaFormu()
         {
             InitializeComponent();
