@@ -59,6 +59,7 @@ namespace IKYonetim.UI
             {
                 btnIzin.Visible = true;
             }
+
         }
 
         private void btnPersonel_Click(object sender, EventArgs e)
