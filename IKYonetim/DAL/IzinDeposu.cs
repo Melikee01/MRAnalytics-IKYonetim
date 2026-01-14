@@ -5,20 +5,20 @@ using System.Collections.Generic;
 
 namespace IKYonetim.DAL
 {
-    public class IzinDAL
+    public class IzinDeposu
     {
-        private baglantiGetir _baglanti = new baglantiGetir();
+        private readonly baglantiGetir _baglanti = new baglantiGetir();
 
-        // 1️⃣ İZİN EKLE
+        // 1) İZİN EKLE
         public void IzinEkle(Izin izin)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
             {
                 string sql = @"
-                INSERT INTO leave_requests
-                (personel_id, baslangic, bitis, izin_turu, aciklama, durum)
-                VALUES
-                (@pid, @bas, @bit, @tur, @acik, 'Beklemede')";
+INSERT INTO leave_requests
+(personel_id, baslangic, bitis, izin_turu, aciklama, durum)
+VALUES
+(@pid, @bas, @bit, @tur, @acik, @durum);";
 
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
@@ -26,50 +26,116 @@ namespace IKYonetim.DAL
                     cmd.Parameters.AddWithValue("@bas", izin.BaslangicTarihi);
                     cmd.Parameters.AddWithValue("@bit", izin.BitisTarihi);
                     cmd.Parameters.AddWithValue("@tur", izin.IzinTuru);
-                    cmd.Parameters.AddWithValue("@acik", izin.Aciklama);
+                    cmd.Parameters.AddWithValue("@acik", (object)izin.Aciklama ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@durum", string.IsNullOrWhiteSpace(izin.Durum) ? "Beklemede" : izin.Durum);
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        // 2️⃣ PERSONELE AİT TÜM İZİNLER
-        public List<Izin> PersonelIzinleriniGetir(int personelId)
+        // 2) PERSONELE AİT İZİNLER
+        public List<Izin> PersonelinIzinleri(int personelId)
         {
-            List<Izin> izinler = new List<Izin>();
+            var liste = new List<Izin>();
 
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
             {
                 string sql = @"
-                SELECT *
-                FROM leave_requests
-                WHERE personel_id = @pid
-                ORDER BY baslangic DESC";
+SELECT id, personel_id, baslangic, bitis, izin_turu, aciklama, durum
+FROM leave_requests
+WHERE personel_id = @pid
+ORDER BY id DESC;";
 
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@pid", personelId);
 
-                    using (MySqlDataReader dr = cmd.ExecuteReader())
+                    using (var dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
                         {
-                            izinler.Add(new Izin
+                            liste.Add(new Izin
                             {
                                 Id = Convert.ToInt32(dr["id"]),
                                 PersonelId = Convert.ToInt32(dr["personel_id"]),
                                 BaslangicTarihi = Convert.ToDateTime(dr["baslangic"]),
                                 BitisTarihi = Convert.ToDateTime(dr["bitis"]),
                                 IzinTuru = dr["izin_turu"].ToString(),
-                                Aciklama = dr["aciklama"].ToString(),
-                                Durum = dr["durum"].ToString()
+                                Aciklama = dr["aciklama"] == DBNull.Value ? null : dr["aciklama"].ToString(),
+                                Durum = dr["durum"] == DBNull.Value ? "Beklemede" : dr["durum"].ToString()
                             });
                         }
                     }
                 }
             }
 
-            return izinler;
+            return liste;
+        }
+
+        // 3) TÜM İZİNLER (IK / Admin ekranı için)
+        public List<Izin> TumIzinler()
+        {
+            var liste = new List<Izin>();
+
+            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            {
+                string sql = @"
+SELECT id, personel_id, baslangic, bitis, izin_turu, aciklama, durum
+FROM leave_requests
+ORDER BY id DESC;";
+
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        liste.Add(new Izin
+                        {
+                            Id = Convert.ToInt32(dr["id"]),
+                            PersonelId = Convert.ToInt32(dr["personel_id"]),
+                            BaslangicTarihi = Convert.ToDateTime(dr["baslangic"]),
+                            BitisTarihi = Convert.ToDateTime(dr["bitis"]),
+                            IzinTuru = dr["izin_turu"].ToString(),
+                            Aciklama = dr["aciklama"] == DBNull.Value ? null : dr["aciklama"].ToString(),
+                            Durum = dr["durum"] == DBNull.Value ? "Beklemede" : dr["durum"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return liste;
+        }
+
+        // 4) DURUM GÜNCELLE (Onayla / Reddet)
+        public void DurumGuncelle(int izinId, string yeniDurum)
+        {
+            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            {
+                string sql = @"UPDATE leave_requests SET durum=@d WHERE id=@id;";
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@d", yeniDurum);
+                    cmd.Parameters.AddWithValue("@id", izinId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // 5) İZİN SİL (İstersen)
+        public void IzinSil(int izinId)
+        {
+            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            {
+                string sql = @"DELETE FROM leave_requests WHERE id=@id;";
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", izinId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
+
+

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IKYonetim.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace IKYonetim
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DepartmanYonetimFormu());
+            Application.Run(new GirisFormu());
         }
     }
 }
