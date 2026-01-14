@@ -16,6 +16,7 @@ namespace IKYonetim.UI
 
 
         public MaasHesaplamaFormu()
+
         {
             InitializeComponent();
             this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225);
