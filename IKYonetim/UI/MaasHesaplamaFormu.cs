@@ -15,6 +15,7 @@ namespace IKYonetim.UI
 
 
 
+
         public MaasHesaplamaFormu()
 
         {
