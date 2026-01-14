@@ -70,7 +70,7 @@ namespace IKYonetim.UI
         {
             new DepartmanYonetimi().ShowDialog();
         }
-
+        
         private void btnIzin_Click(object sender, EventArgs e)
         {
             new IzinFormu().ShowDialog(); 
