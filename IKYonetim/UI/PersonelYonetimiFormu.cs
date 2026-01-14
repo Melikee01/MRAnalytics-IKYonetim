@@ -10,7 +10,7 @@ namespace IKYonetim.UI
 {
     public partial class PersonelYonetimiFormu : Form
     {
-        private bool _formIlkAcilis = true;
+       
 
         private readonly PersonelYoneticisi _yonetici = new PersonelYoneticisi();
   
@@ -53,7 +53,7 @@ namespace IKYonetim.UI
 
             ListeyiYenile();
             YetkiyeGoreButonlar();
-            _formIlkAcilis = false;
+           
         }
 
         private void YetkiyeGoreButonlar()

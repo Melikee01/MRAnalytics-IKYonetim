@@ -1,4 +1,5 @@
 ﻿using IKYonetim.BLL;
+using IKYonetim.DAL;
 using IKYonetim.ENTITY;
 using System;
 using System.Collections.Generic;
@@ -9,43 +10,38 @@ namespace IKYonetim.UI
 {
     public partial class PerformansFormu : Form
     {
+        // ===== BLL / DAL =====
         private readonly PerformansYoneticisi _performansYoneticisi = new PerformansYoneticisi();
         private readonly PersonelYoneticisi _personelYoneticisi = new PersonelYoneticisi();
+        private readonly UsersDeposu _kullaniciDeposu = new UsersDeposu();
 
-        private List<Personel> _personeller = new List<Personel>();
-        private int _seciliPerformansId = 0;
+        // ===== STATE =====
         private List<Personel> _tumPersoneller = new List<Personel>();
-
+        private List<Personel> _aktifPersoneller = new List<Personel>();
+        private int _seciliPerformansId = 0;
 
         public PerformansFormu()
         {
             InitializeComponent();
-            this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225);
-            this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Regular);
-            this.Load += PerformansFormu_Load;
+            Load += PerformansFormu_Load;
         }
 
+        // =========================================================
+        // FORM LOAD
+        // =========================================================
         private void PerformansFormu_Load(object sender, EventArgs e)
         {
             nudPuan.Minimum = 1;
             nudPuan.Maximum = 100;
             nudPuan.Value = 1;
 
+            dtpTarih.MaxDate = DateTime.Today;
             dtpTarih.Value = DateTime.Today;
 
             dgvPerformans.ReadOnly = true;
             dgvPerformans.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPerformans.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPerformans.MultiSelect = false;
-
-            // Grid Stilleri
-            dgvPerformans.BackgroundColor = System.Drawing.Color.White;
-            dgvPerformans.EnableHeadersVisualStyles = false;
-            dgvPerformans.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;
-            dgvPerformans.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
-            dgvPerformans.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
-            dgvPerformans.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.DeepPink;
-            dgvPerformans.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
 
             PersonelleriDoldur();
             ListeyiYenile();
@@ -54,19 +50,20 @@ namespace IKYonetim.UI
             btnTemizle.Enabled = false;
         }
 
+        // =========================================================
+        // PERSONEL COMBO
+        // =========================================================
         private void PersonelleriDoldur()
         {
             try
             {
                 _tumPersoneller = _personelYoneticisi.TumPersonelleriGetir();
+                _aktifPersoneller = _tumPersoneller.Where(p => p.Aktif).ToList();
 
-                // ComboBox için SADECE aktifler
-                _personeller = _tumPersoneller.Where(p => p.Aktif).ToList();
-
-                var kaynak = _personeller.Select(p => new
+                var kaynak = _aktifPersoneller.Select(p => new
                 {
                     p.Id,
-                    AdSoyad = $"{p.Ad} {p.Soyad} ({p.Departman})"
+                    AdSoyad = p.Ad + " " + p.Soyad + " (" + p.Departman + ")"
                 }).ToList();
 
                 cmbPersonel.DataSource = null;
@@ -83,12 +80,13 @@ namespace IKYonetim.UI
             }
         }
 
-
+        // =========================================================
+        // LİSTELEME
+        // =========================================================
         private void ListeyiYenile()
         {
             var liste = _performansYoneticisi.TumPerformanslar();
 
-            // Grid'de ID yerine ad soyad göstermek için view-model oluşturuyoruz
             var view = liste.Select(x => new
             {
                 x.Id,
@@ -102,16 +100,19 @@ namespace IKYonetim.UI
             dgvPerformans.DataSource = null;
             dgvPerformans.DataSource = view;
 
-            if (dgvPerformans.Columns.Contains("Id"))
+            if (dgvPerformans.Columns["Id"] != null)
                 dgvPerformans.Columns["Id"].Visible = false;
         }
 
         private string PersonelAdSoyadGetir(int personelId)
         {
-            var p = _tumPersoneller.FirstOrDefault(x => x.Id == personelId);
-            return p == null ? $"#{personelId}" : $"{p.Ad} {p.Soyad}";
+            Personel p = _tumPersoneller.FirstOrDefault(x => x.Id == personelId);
+            return p == null ? "#" + personelId : p.Ad + " " + p.Soyad;
         }
 
+        // =========================================================
+        // KAYDET
+        // =========================================================
         private void btnKaydet_Click(object sender, EventArgs e)
         {
             if (cmbPersonel.SelectedValue == null)
@@ -120,15 +121,13 @@ namespace IKYonetim.UI
                 return;
             }
 
-            int personelId = Convert.ToInt32(cmbPersonel.SelectedValue);
-
-            var kayit = new Performans
+            Performans kayit = new Performans
             {
-                PersonelId = personelId,
+                PersonelId = Convert.ToInt32(cmbPersonel.SelectedValue),
                 Puan = Convert.ToInt32(nudPuan.Value),
-                Aciklama = (txtAciklama.Text ?? "").Trim(),
+                Aciklama = txtAciklama.Text == null ? "" : txtAciklama.Text.Trim(),
                 DegerlendirmeTarihi = dtpTarih.Value.Date,
-                DegerlendirenId = OturumYoneticisi.PersonelId // NOT NULL için şart
+                DegerlendirenId = OturumYoneticisi.PersonelId
             };
 
             try
@@ -145,34 +144,39 @@ namespace IKYonetim.UI
             }
         }
 
+        // =========================================================
+        // GÜNCELLE
+        // =========================================================
         private void btnGuncelle_Click(object sender, EventArgs e)
         {
-            if (_seciliPerformansId <= 0)
-            {
-                MessageBox.Show("Güncellemek için listeden bir kayıt seçin.");
-                return;
-            }
-
-            if (cmbPersonel.SelectedValue == null)
-            {
-                MessageBox.Show("Lütfen personel seçin.");
-                return;
-            }
-
-            int personelId = Convert.ToInt32(cmbPersonel.SelectedValue);
-
-            var guncel = new Performans
-            {
-                Id = _seciliPerformansId,
-                PersonelId = personelId,
-                Puan = Convert.ToInt32(nudPuan.Value),
-                Aciklama = (txtAciklama.Text ?? "").Trim(),
-                DegerlendirmeTarihi = dtpTarih.Value.Date,
-                DegerlendirenId = OturumYoneticisi.PersonelId // güncelleyen kim? pratik: oturumdaki kişi
-            };
-
             try
             {
+                if (_seciliPerformansId <= 0)
+                {
+                    MessageBox.Show("Güncellemek için kayıt seçin.");
+                    return;
+                }
+
+                // --- Rol Kontrolü ---
+                if (string.Equals(OturumYoneticisi.Rol, "IK", StringComparison.OrdinalIgnoreCase))
+                {
+                    int hedefPersonelId = Convert.ToInt32(cmbPersonel.SelectedValue);
+                    string hedefRol = _kullaniciDeposu.PersonelinRolunuGetir(hedefPersonelId);
+
+                    if (!string.Equals(hedefRol, "users", StringComparison.OrdinalIgnoreCase))
+                        throw new Exception("İK, Admin/İK personelin performans kaydını güncelleyemez.");
+                }
+
+                Performans guncel = new Performans
+                {
+                    Id = _seciliPerformansId,
+                    PersonelId = Convert.ToInt32(cmbPersonel.SelectedValue),
+                    Puan = Convert.ToInt32(nudPuan.Value),
+                    Aciklama = txtAciklama.Text == null ? "" : txtAciklama.Text.Trim(),
+                    DegerlendirmeTarihi = dtpTarih.Value.Date,
+                    DegerlendirenId = OturumYoneticisi.PersonelId
+                };
+
                 _performansYoneticisi.PerformansGuncelle(guncel);
                 MessageBox.Show("Performans güncellendi.");
 
@@ -185,24 +189,70 @@ namespace IKYonetim.UI
             }
         }
 
-        private void btnSil_Click(object sender, EventArgs e)
+        // =========================================================
+        // GRID CLICK
+        // =========================================================
+        private void dgvPerformans_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            DataGridViewRow row = dgvPerformans.Rows[e.RowIndex];
+            _seciliPerformansId = Convert.ToInt32(row.Cells["Id"].Value);
+
+            string personelAd = row.Cells["Personel"].Value.ToString();
+            Personel match = _aktifPersoneller.FirstOrDefault(p => (p.Ad + " " + p.Soyad) == personelAd);
+
+            if (match != null)
+                cmbPersonel.SelectedValue = match.Id;
+
+            nudPuan.Value = Convert.ToDecimal(row.Cells["Puan"].Value);
+            txtAciklama.Text = row.Cells["Aciklama"].Value == null ? "" : row.Cells["Aciklama"].Value.ToString();
+            dtpTarih.Value = Convert.ToDateTime(row.Cells["Tarih"].Value);
+
+            // --- Rol Kontrolü ---
+            if (string.Equals(OturumYoneticisi.Rol, "IK", StringComparison.OrdinalIgnoreCase))
+            {
+                int hedefPersonelId = Convert.ToInt32(cmbPersonel.SelectedValue);
+                string hedefRol = _kullaniciDeposu.PersonelinRolunuGetir(hedefPersonelId);
+
+                if (string.IsNullOrEmpty(hedefRol) ||
+                    !string.Equals(hedefRol, "users", StringComparison.OrdinalIgnoreCase))
+                {
+                    btnGuncelle.Enabled = false;
+                    btnTemizle.Enabled = true;
+                    MessageBox.Show("İK, Admin/İK personelin performans kaydını güncelleyemez.");
+                    return;
+                }
+            }
+
+            btnGuncelle.Enabled = true;
+            btnTemizle.Enabled = true;
+        }
+
+        // =========================================================
+        // PASİFE AL
+        // =========================================================
+        private void btnTemizle_Click(object sender, EventArgs e)
         {
             if (_seciliPerformansId <= 0)
             {
-                MessageBox.Show("Silmek için listeden bir kayıt seçin.");
+                MessageBox.Show("Silmek için kayıt seçin.");
                 return;
             }
 
-            var sonuc = MessageBox.Show("Seçili performans kaydı silinsin mi?", "Onay", MessageBoxButtons.YesNo);
+            DialogResult sonuc = MessageBox.Show(
+                "Kayıt silinecek. Emin misiniz?",
+                "Onay",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
             if (sonuc != DialogResult.Yes) return;
 
             try
             {
-                // BLL’de yoksa doğrudan DAL çağırma. En doğrusu BLL’ye de eklemek.
-                // Eğer PerformansYoneticisi içinde PerformansSil(int id) yazdıysan:
                 _performansYoneticisi.PerformansPasifeAl(_seciliPerformansId);
-
                 MessageBox.Show("Kayıt silindi.");
+
                 Temizle();
                 ListeyiYenile();
             }
@@ -212,40 +262,12 @@ namespace IKYonetim.UI
             }
         }
 
-        // Grid’den satır seçince formu doldur
-        private void dgvPerformans_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-
-            var row = dgvPerformans.Rows[e.RowIndex];
-            _seciliPerformansId = Convert.ToInt32(row.Cells["Id"].Value);
-
-            // View'da personel adını gösteriyoruz; tekrar ID'ye dönmek için seçili ID'yi DB'den çekmeye gerek kalmasın diye
-            // daha pratik: grid'e Id gizli ama duruyor, personel seçimini ad üzerinden eşleyelim.
-            // Personel sütunu "Ad Soyad" döndürüyor; ComboBox'ı eşlemek için personel ID lazım.
-            // Bu yüzden: seçili kaydı DB’den çekmek yerine listeyi tekrar query etmek yerine,
-            // burada basit yaklaşım: grid’de Personel ve Tarih üzerinden formu doldururuz.
-            // En sağlamı: DAL/BLL’ye "Id ile getir" metodu eklemek. Şimdilik pratik yapalım:
-
-            // Personel adı (örn "Ali Veli") → combobox'ta aynı başlangıçla bulmaya çalış
-            string personelAd = row.Cells["Personel"].Value?.ToString() ?? "";
-
-            var match = _personeller.FirstOrDefault(p => ($"{p.Ad} {p.Soyad}") == personelAd);
-            if (match != null)
-                cmbPersonel.SelectedValue = match.Id;
-
-            nudPuan.Value = Convert.ToDecimal(row.Cells["Puan"].Value);
-            txtAciklama.Text = row.Cells["Aciklama"].Value?.ToString() ?? "";
-            dtpTarih.Value = Convert.ToDateTime(row.Cells["Tarih"].Value);
-
-            btnGuncelle.Enabled = true;
-            btnTemizle.Enabled = true;
-        }
-
+        // =========================================================
+        // FORM RESET
+        // =========================================================
         private void Temizle()
         {
             _seciliPerformansId = 0;
-
             nudPuan.Value = 1;
             dtpTarih.Value = DateTime.Today;
             txtAciklama.Clear();
@@ -256,34 +278,5 @@ namespace IKYonetim.UI
             btnGuncelle.Enabled = false;
             btnTemizle.Enabled = false;
         }
-
-        private void btnTemizle_Click(object sender, EventArgs e)
-        {
-            if (_seciliPerformansId <= 0)
-            {
-                MessageBox.Show("Silmek için kayıt seçin.");
-                return;
-            }
-
-            // İstersen onay sor:
-            var sonuc = MessageBox.Show("Kayıt silinecek. Emin misiniz?",
-                                        "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (sonuc != DialogResult.Yes) return;
-
-            try
-            {
-                _performansYoneticisi.PerformansPasifeAl(_seciliPerformansId);
-                MessageBox.Show("Kayıt silindi.");
-
-                Temizle();
-                ListeyiYenile();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        
-
     }
 }

@@ -39,9 +39,9 @@
             this.pnlTarih = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.PnlMaas = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRapor)).BeginInit();
             this.grpFiltre.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAy)).BeginInit();
@@ -81,7 +81,7 @@
             this.grpFiltre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.grpFiltre.Controls.Add(this.cmbRapor);
             this.grpFiltre.Controls.Add(this.btnGetir);
-            this.grpFiltre.Location = new System.Drawing.Point(12, 12);
+            this.grpFiltre.Location = new System.Drawing.Point(241, 12);
             this.grpFiltre.Name = "grpFiltre";
             this.grpFiltre.Size = new System.Drawing.Size(251, 130);
             this.grpFiltre.TabIndex = 3;
@@ -90,7 +90,7 @@
             // 
             // nudAy
             // 
-            this.nudAy.Location = new System.Drawing.Point(73, 67);
+            this.nudAy.Location = new System.Drawing.Point(73, 68);
             this.nudAy.Maximum = new decimal(new int[] {
             12,
             0,
@@ -112,7 +112,7 @@
             // 
             // nudYil
             // 
-            this.nudYil.Location = new System.Drawing.Point(73, 41);
+            this.nudYil.Location = new System.Drawing.Point(73, 34);
             this.nudYil.Maximum = new decimal(new int[] {
             2100,
             0,
@@ -152,7 +152,7 @@
             this.pnlTarih.Controls.Add(this.label2);
             this.pnlTarih.Controls.Add(this.dtBit);
             this.pnlTarih.Controls.Add(this.dtBas);
-            this.pnlTarih.Location = new System.Drawing.Point(284, 329);
+            this.pnlTarih.Location = new System.Drawing.Point(409, 332);
             this.pnlTarih.Name = "pnlTarih";
             this.pnlTarih.Size = new System.Drawing.Size(238, 100);
             this.pnlTarih.TabIndex = 4;
@@ -160,11 +160,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(102, 3);
+            this.label2.Location = new System.Drawing.Point(79, 6);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(98, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "label1";
+            this.label2.Text = "izin Tarihi Filtreleme";
             // 
             // PnlMaas
             // 
@@ -174,19 +174,19 @@
             this.PnlMaas.Controls.Add(this.label1);
             this.PnlMaas.Controls.Add(this.nudAy);
             this.PnlMaas.Controls.Add(this.nudYil);
-            this.PnlMaas.Location = new System.Drawing.Point(48, 332);
+            this.PnlMaas.Location = new System.Drawing.Point(140, 332);
             this.PnlMaas.Name = "PnlMaas";
             this.PnlMaas.Size = new System.Drawing.Size(215, 100);
             this.PnlMaas.TabIndex = 5;
             // 
-            // label1
+            // label4
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(64, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Maaş Filtrele:";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 67);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(22, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Ay:";
             // 
             // label3
             // 
@@ -197,14 +197,14 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Yıl:";
             // 
-            // label4
+            // label1
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 67);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(22, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Ay:";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(64, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Maaş Filtrele:";
             // 
             // RaporFormu
             // 

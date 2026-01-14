@@ -2,32 +2,27 @@
 using IKYonetim.ENTITY;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace IKYonetim.UI
 {
     public partial class MaasHesaplamaFormu : Form
     {
-
         private readonly PersonelYoneticisi _personelYoneticisi = new PersonelYoneticisi();
         private List<Personel> _aktifPersoneller = new List<Personel>();
+        private int _seciliMaasId = 0;
+
 
         public MaasHesaplamaFormu()
         {
             InitializeComponent();
             this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225);
             this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Regular);
-            txtBrut.TextChanged += txtPara_TextChanged;
-            txtPrim.TextChanged += txtPara_TextChanged;
-            txtMesai.TextChanged += txtPara_TextChanged;
-            txtKesinti.TextChanged += txtPara_TextChanged;
         }
 
         private void MaasHesaplamaFormu_Load(object sender, EventArgs e)
         {
-            // Grid Stilleri
+
             dgvMaaslar.BackgroundColor = System.Drawing.Color.White;
             dgvMaaslar.EnableHeadersVisualStyles = false;
             dgvMaaslar.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;
@@ -36,12 +31,12 @@ namespace IKYonetim.UI
             dgvMaaslar.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.DeepPink;
             dgvMaaslar.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
 
-            // Yıl
+
             cmbYil.Items.Clear();
             for (int yil = 2020; yil <= 2030; yil++)
                 cmbYil.Items.Add(yil);
 
-            // Ay
+
             cmbAy.Items.Clear();
             for (int ay = 1; ay <= 12; ay++)
                 cmbAy.Items.Add(ay);
@@ -49,11 +44,12 @@ namespace IKYonetim.UI
             if (cmbYil.Items.Count > 0) cmbYil.SelectedIndex = 0;
             if (cmbAy.Items.Count > 0) cmbAy.SelectedIndex = 0;
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("tr-TR");
 
-            // Personel combobox doldur
             PersonelComboDoldur();
+
+            cmbPersonel.SelectedIndexChanged += (s, e2) => { dgvMaaslar.DataSource = null; };
+
+
         }
 
         private void btnHesapla_Click(object sender, EventArgs e)
@@ -73,6 +69,26 @@ namespace IKYonetim.UI
                 MessageBox.Show("Lütfen maaş alanlarını doğru giriniz.");
             }
         }
+        private void CmbPersonel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cmbPersonel.SelectedValue == null) return;
+
+                int pid = Convert.ToInt32(cmbPersonel.SelectedValue);
+
+                var yonetici = new MaasYoneticisi();
+                var veri = yonetici.PersonelGecmisi(pid);
+
+                MaasGridBind(veri);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
@@ -98,7 +114,7 @@ namespace IKYonetim.UI
 
                 Maas maas = new Maas
                 {
-                    // Artık txtPersonelId yok: seçili personelden alıyoruz
+
                     PersonelId = Convert.ToInt32(cmbPersonel.SelectedValue),
                     Yil = Convert.ToInt32(cmbYil.SelectedItem),
                     Ay = Convert.ToInt32(cmbAy.SelectedItem),
@@ -117,8 +133,9 @@ namespace IKYonetim.UI
 
                 MessageBox.Show("Maaş kaydedildi.");
 
-                // Kaydettikten sonra seçili personelin geçmişini yenile
-                dgvMaaslar.DataSource = yonetici.PersonelGecmisi(maas.PersonelId);
+                var veri = yonetici.PersonelGecmisi(maas.PersonelId);
+                MaasGridBind(veri);
+
             }
             catch (FormatException)
             {
@@ -140,13 +157,90 @@ namespace IKYonetim.UI
                     return;
                 }
 
-                MaaslariListeleSeciliPersonel();
+                int personelId = Convert.ToInt32(cmbPersonel.SelectedValue);
+
+
+                MaasYoneticisi yonetici = new MaasYoneticisi();
+                var veri = yonetici.PersonelGecmisi(personelId);
+                MaasGridBind(veri);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private string SeciliPersonelAdSoyad()
+        {
+            if (cmbPersonel.SelectedValue == null) return "";
+            int id = Convert.ToInt32(cmbPersonel.SelectedValue);
+
+            var p = _aktifPersoneller.Find(x => x.Id == id);
+            return p == null ? $"#{id}" : $"{p.Ad} {p.Soyad}";
+        }
+        private void MaasGridBind(object data)
+        {
+            string adSoyad = SeciliPersonelAdSoyad();
+
+
+            if (data is System.Data.DataTable dt)
+            {
+
+                if (!dt.Columns.Contains("Personel"))
+                    dt.Columns.Add("Personel", typeof(string));
+
+                foreach (System.Data.DataRow r in dt.Rows)
+                    r["Personel"] = adSoyad;
+
+                dgvMaaslar.DataSource = null;
+                dgvMaaslar.DataSource = dt;
+
+
+                if (dgvMaaslar.Columns.Contains("PersonelId"))
+                    dgvMaaslar.Columns["PersonelId"].Visible = false;
+
+
+                if (dgvMaaslar.Columns.Contains("Personel"))
+                    dgvMaaslar.Columns["Personel"].DisplayIndex = 0;
+
+                return;
+            }
+
+
+            var list = data as System.Collections.IEnumerable;
+            if (list == null)
+            {
+                dgvMaaslar.DataSource = data;
+                return;
+            }
+
+
+            var view = new List<object>();
+            foreach (dynamic x in list)
+            {
+                view.Add(new
+                {
+                    x.Id,
+                    Personel = adSoyad,
+                    x.Yil,
+                    x.Ay,
+                    x.BrutMaas,
+                    x.Prim,
+                    x.Mesai,
+                    Kesinti = x.KesintiToplam,   // sende KesintiToplam
+                    x.HesaplamaTarihi,
+                    x.Aciklama
+                });
+            }
+
+            dgvMaaslar.DataSource = null;
+            dgvMaaslar.DataSource = view;
+
+            if (dgvMaaslar.Columns.Contains("Id"))
+                dgvMaaslar.Columns["Id"].Visible = false;
+        }
+
 
         private void PersonelComboDoldur()
         {
@@ -176,69 +270,6 @@ namespace IKYonetim.UI
             public int Id { get; set; }
             public string Gosterim { get; set; }
         }
-        private class MaasGridRow
-        {
-            public int Id { get; set; }              // DB silme için lazım (gizleyeceğiz)
-            public int PersonelId { get; set; }
-            public string AdSoyad { get; set; }      // Id yerine göstereceğiz
-            public int Yil { get; set; }
-            public int Ay { get; set; }
-            public decimal BrutMaas { get; set; }
-            public decimal Prim { get; set; }
-            public decimal Mesai { get; set; }
-            public decimal KesintiToplam { get; set; }
-            public decimal NetMaas { get; set; }
-            public DateTime HesaplamaTarihi { get; set; }
-            public string Aciklama { get; set; }
-        }
-        private List<MaasGridRow> GridVerisiHazirla(List<Maas> maaslar)
-        {
-            var rows = new List<MaasGridRow>();
-
-            foreach (var m in maaslar)
-            {
-                // _aktifPersoneller zaten combobox doldururken çekiliyor
-                var p = _aktifPersoneller.Find(x => x.Id == m.PersonelId);
-                string adSoyad = p == null ? ("#" + m.PersonelId) : (p.Ad + " " + p.Soyad);
-
-                rows.Add(new MaasGridRow
-                {
-                    Id = m.Id,
-                    PersonelId = m.PersonelId,
-                    AdSoyad = adSoyad,
-                    Yil = m.Yil,
-                    Ay = m.Ay,
-                    BrutMaas = m.BrutMaas,
-                    Prim = m.Prim,
-                    Mesai = m.Mesai,
-                    KesintiToplam = m.KesintiToplam,
-                    NetMaas = m.NetMaas,
-                    HesaplamaTarihi = m.HesaplamaTarihi,
-                    Aciklama = m.Aciklama
-                });
-            }
-
-            return rows;
-        }
-        private void MaaslariListeleSeciliPersonel()
-        {
-            if (cmbPersonel.SelectedValue == null) return;
-
-            int personelId = Convert.ToInt32(cmbPersonel.SelectedValue);
-
-            MaasYoneticisi yonetici = new MaasYoneticisi();
-            var maaslar = yonetici.PersonelGecmisi(personelId);
-
-            dgvMaaslar.AutoGenerateColumns = true;
-            dgvMaaslar.DataSource = GridVerisiHazirla(maaslar);
-
-            // Kolon düzeni:
-            if (dgvMaaslar.Columns["Id"] != null)
-                dgvMaaslar.Columns["Id"].Visible = false; // Id gizli
-
-            if (dgvMaaslar.Columns["AdSoyad"] != null)
-                dgvMaaslar.Columns["AdSoyad"].HeaderText = "Ad Soyad";
-        }
 
         private void btnSil_Click(object sender, EventArgs e)
         {
@@ -246,74 +277,78 @@ namespace IKYonetim.UI
             {
                 if (dgvMaaslar.CurrentRow == null)
                 {
-                    MessageBox.Show("Lütfen silmek için bir satır seçiniz.");
+                    MessageBox.Show("Lütfen tablodan silinecek kaydı seçiniz.");
                     return;
                 }
 
-                // GridVerisiHazirla ile DataSource bağladık: satır MaasGridRow
-                var rowObj = dgvMaaslar.CurrentRow.DataBoundItem as MaasGridRow;
-                if (rowObj == null || rowObj.Id <= 0)
+                if (!dgvMaaslar.Columns.Contains("Id"))
                 {
-                    MessageBox.Show("Silinecek kayıt bulunamadı.");
+                    MessageBox.Show("Silme için Id kolonu bulunamadı. (Grid bind kontrol et)");
                     return;
                 }
+
+                int maasId = Convert.ToInt32(dgvMaaslar.CurrentRow.Cells["Id"].Value);
 
                 var onay = MessageBox.Show("Seçili maaş kaydı silinsin mi?", "Onay",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (onay != DialogResult.Yes) return;
 
-                MaasYoneticisi yonetici = new MaasYoneticisi();
-                yonetici.Sil(rowObj.Id);
+                var yonetici = new MaasYoneticisi();
+                yonetici.Sil(maasId);
 
-                MessageBox.Show("Kayıt silindi.");
+                MessageBox.Show("Maaş kaydı silindi.");
 
-                MaaslariListeleSeciliPersonel();
+
+                int personelId = Convert.ToInt32(cmbPersonel.SelectedValue);
+                var veri = yonetici.PersonelGecmisi(personelId);
+                MaasGridBind(veri);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool _formatlaniyor = false;
-
-        private void txtPara_TextChanged(object sender, EventArgs e)
+        private void dgvMaaslar_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (_formatlaniyor) return;
+            if (e.RowIndex < 0) return;
 
-            var tb = sender as TextBox;
-            if (tb == null) return;
+            var row = dgvMaaslar.Rows[e.RowIndex];
 
-            string text = tb.Text;
 
-            // Sadece rakamları al
-            string digits = "";
-            for (int i = 0; i < text.Length; i++)
+            if (row.Cells["Id"]?.Value == null) return;
+
+            _seciliMaasId = Convert.ToInt32(row.Cells["Id"].Value);
+            btnSil.Enabled = true;
+
+            try
             {
-                char c = text[i];
-                if (char.IsDigit(c)) digits += c;
+                if (e.RowIndex < 0) return;
+
+                var seciliRow = dgvMaaslar.Rows[e.RowIndex];
+
+
+
+                if (row.Cells["Yil"]?.Value != null)
+                    cmbYil.SelectedItem = Convert.ToInt32(row.Cells["Yil"].Value);
+
+                if (row.Cells["Ay"]?.Value != null)
+                    cmbAy.SelectedItem = Convert.ToInt32(row.Cells["Ay"].Value);
+
+
+                txtBrut.Text = Convert.ToDecimal(row.Cells["BrutMaas"].Value).ToString("0.##");
+                txtPrim.Text = Convert.ToDecimal(row.Cells["Prim"].Value).ToString("0.##");
+                txtMesai.Text = Convert.ToDecimal(row.Cells["Mesai"].Value).ToString("0.##");
+                txtKesinti.Text = Convert.ToDecimal(row.Cells["Kesinti"].Value).ToString("0.##");
+
+
+                btnHesapla.PerformClick();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
-            if (digits.Length == 0)
-            {
-                _formatlaniyor = true;
-                tb.Text = "";
-                _formatlaniyor = false;
-                return;
-            }
-
-            // Çok büyümesin diye (isteğe bağlı)
-            if (digits.Length > 12) digits = digits.Substring(0, 12);
-
-            decimal value = decimal.Parse(digits); // 25000
-
-            _formatlaniyor = true;
-            tb.Text = value.ToString("N0", new CultureInfo("tr-TR")); // 25.000
-            tb.SelectionStart = tb.Text.Length; // imleç sona
-            _formatlaniyor = false;
         }
-
-
     }
-
 }

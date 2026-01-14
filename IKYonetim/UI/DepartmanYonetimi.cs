@@ -11,39 +11,30 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IKYonetim.UI
+
 {
     public partial class DepartmanYonetimi : Form
     {
         private readonly DepartmanYoneticisi _yonetici = new DepartmanYoneticisi();
+
         public DepartmanYonetimi()
         {
             InitializeComponent();
-            this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225);
-            this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Regular);
         }
 
         private void DepartmanYonetimi_Load(object sender, EventArgs e)
         {
-            // Grid Stilleri
-            dgvDepartman.BackgroundColor = System.Drawing.Color.White;
-            dgvDepartman.EnableHeadersVisualStyles = false;
-            dgvDepartman.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;
-            dgvDepartman.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
-            dgvDepartman.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
-            dgvDepartman.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.DeepPink;
-            dgvDepartman.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
-
             ListeyiYenile();
         }
         private void ListeyiYenile()
         {
             List<Departman> liste;
 
-            // Checkbox işaretliyse → aktif + pasif
+            // Pasifler dahil tüm departmanlar
             if (chkPasifleriGoster.Checked)
                 liste = _yonetici.TumDepartmanlar();
             else
-                // Checkbox kapalıysa → sadece aktifler
+                // Yalnızca aktif departmanlar
                 liste = _yonetici.AktifDepartmanlariGetir();
 
             dgvDepartman.DataSource = null;
@@ -57,6 +48,7 @@ namespace IKYonetim.UI
                 dgvDepartman.Columns["Id"].Visible = false;
             PasifSatirlariGriYap();
         }
+
 
         private int SeciliId()
         {
@@ -82,7 +74,6 @@ namespace IKYonetim.UI
             {
                 MessageBox.Show(ex.Message);
             }
-            MessageBox.Show("Gönderilen değer: '" + txtDepartmanAdi.Text + "'");
         }
 
         private void btnGuncelle_Click(object sender, EventArgs e)
@@ -110,6 +101,15 @@ namespace IKYonetim.UI
         {
             ListeyiYenile();
         }
+
+
+        private void dgvDepartman_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvDepartman.CurrentRow?.DataBoundItem is Departman d)
+                btnAktifeAl.Enabled = !d.Aktif;
+            else
+                btnAktifeAl.Enabled = false;
+        }
         private void PasifSatirlariGriYap()
         {
             foreach (DataGridViewRow row in dgvDepartman.Rows)
@@ -134,6 +134,7 @@ namespace IKYonetim.UI
             }
 
             var secili = dgvDepartman.CurrentRow.DataBoundItem as Departman;
+
             if (secili == null)
             {
                 MessageBox.Show("Seçim okunamadı.");
@@ -151,13 +152,5 @@ namespace IKYonetim.UI
             MessageBox.Show("Departman tekrar aktife alındı.");
         }
 
-
-        private void dgvDepartman_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dgvDepartman.CurrentRow?.DataBoundItem is Departman d)
-                btnAktifeAl.Enabled = !d.Aktif;
-            else
-                btnAktifeAl.Enabled = false;
-        }
     }
 }

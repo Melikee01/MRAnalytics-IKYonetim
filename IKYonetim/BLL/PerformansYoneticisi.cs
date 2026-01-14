@@ -15,7 +15,7 @@ namespace IKYonetim.BLL
             if (p.PersonelId <= 0) throw new Exception("Personel seçilmedi.");
             if (p.DegerlendirenId <= 0) throw new Exception("Değerlendiren bilgisi zorunlu.");
             if (p.Puan < 1 || p.Puan > 100) throw new Exception("Puan 1-100 arasında olmalı.");
-
+           
             // NOT: Bu kontrol ancak DegerlendirenId de personel_id ise anlamlıdır.
             // Senin senaryonda DegerlendirenId = users.id olma ihtimali yüksek.
             // Yine de kalsın istiyorsan kalsın; sorun çıkarırsa kaldırırız.

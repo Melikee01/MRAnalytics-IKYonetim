@@ -66,6 +66,33 @@ VALUES (@pid, @email, @parola, @rol, @aktif);";
                 cmd.ExecuteNonQuery();
             }
         }
+        public string PersonelinRolunuGetir(int personelId)
+        {
+            baglantiGetir b = new baglantiGetir();
+
+            using (MySqlConnection conn = b.BaglantiGetir())
+            {
+                const string sql = @"
+SELECT rol
+FROM users
+WHERE personel_id = @pid AND aktif = 1
+LIMIT 1;";
+
+                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@pid", personelId);
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result == null || result == DBNull.Value)
+                        return null;
+
+                    return result.ToString();
+                }
+            }
+        }
+
+
 
     }
 }

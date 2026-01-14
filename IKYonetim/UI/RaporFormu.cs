@@ -13,14 +13,12 @@ namespace IKYonetim.UI
         public RaporFormu()
         {
             InitializeComponent();
-            this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225);
-            this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Regular);
             this.Load += RaporFormu_Load;
         }
 
         private void RaporFormu_Load(object sender, EventArgs e)
         {
-            // Combo doldur
+
             cmbRapor.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbRapor.Items.Clear();
             cmbRapor.Items.Add(new ComboItem("Departman Bazlı Personel Dağılımı", RaporTipi.DepartmanBazliPersonelDagilimi));
@@ -32,7 +30,7 @@ namespace IKYonetim.UI
             cmbRapor.SelectedIndexChanged += CmbRapor_SelectedIndexChanged;
             cmbRapor.SelectedIndex = 0;
 
-            // Default filtre değerleri
+
             dtBas.Value = DateTime.Today.AddDays(-30);
             dtBit.Value = DateTime.Today;
 
@@ -41,20 +39,11 @@ namespace IKYonetim.UI
 
 
 
-            // Grid ayarı
+
             dgvRapor.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRapor.ReadOnly = true;
             dgvRapor.AllowUserToAddRows = false;
             dgvRapor.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
-            // Grid Stilleri - Vivid
-            dgvRapor.BackgroundColor = System.Drawing.Color.White;
-            dgvRapor.EnableHeadersVisualStyles = false;
-            dgvRapor.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;
-            dgvRapor.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
-            dgvRapor.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
-            dgvRapor.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.DeepPink;
-            dgvRapor.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
 
             FiltrePanelleriniAyarla();
         }
@@ -68,20 +57,27 @@ namespace IKYonetim.UI
         {
             var tip = SeciliRaporTipi();
 
-            // Hepsini kapat
+
             pnlTarih.Visible = false;
             PnlMaas.Visible = false;
 
 
-            // Gerekene göre aç
+
             if (tip == RaporTipi.IzinRaporu)
                 pnlTarih.Visible = true;
 
             if (tip == RaporTipi.MaasRaporu)
+            {
                 PnlMaas.Visible = true;
+                nudAy.Visible = true;
+            }
 
             if (tip == RaporTipi.IzinHakedisKontrolu)
-                PnlMaas.Visible = true; // yıl lazım (ay şart değil ama panel aynı)
+            {
+                PnlMaas.Visible = true;
+                nudAy.Visible = false;
+            }
+
         }
 
         private RaporTipi SeciliRaporTipi()
@@ -112,7 +108,7 @@ namespace IKYonetim.UI
                 }
                 else if (tip == RaporTipi.PerformansRaporu)
                 {
-                    // nudTopN formda yoksa sabit de verebilirsin: dt = _yonetici.PerformansRaporu(5);
+
                     dt = _yonetici.PerformansRaporu(2);
                 }
 
@@ -123,6 +119,18 @@ namespace IKYonetim.UI
 
                 dgvRapor.DataSource = null;
                 dgvRapor.DataSource = dt;
+
+
+                if (tip == RaporTipi.IzinHakedisKontrolu &&
+                    dgvRapor.Columns.Contains("KalanGun"))
+                {
+                    dgvRapor.Sort(
+                        dgvRapor.Columns["KalanGun"],
+                        System.ComponentModel.ListSortDirection.Ascending
+                    );
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -130,7 +138,7 @@ namespace IKYonetim.UI
             }
         }
 
-        // ComboBox için küçük yardımcı sınıf
+
         private class ComboItem
         {
             public string Text { get; private set; }
@@ -148,10 +156,6 @@ namespace IKYonetim.UI
             }
         }
 
-        private void nudYil_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
-
