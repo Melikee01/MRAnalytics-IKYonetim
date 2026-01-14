@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace IKYonetim.UI
 {
+
     public partial class MaasHesaplamaFormu : Form
     {
         private readonly PersonelYoneticisi _personelYoneticisi = new PersonelYoneticisi();
