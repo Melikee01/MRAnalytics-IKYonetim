@@ -20,6 +20,7 @@ namespace IKYonetim.UI
 
         {
             InitializeComponent();
+
             this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225);
             this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Regular);
         }
