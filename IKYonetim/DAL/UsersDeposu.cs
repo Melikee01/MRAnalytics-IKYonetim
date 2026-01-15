@@ -58,7 +58,7 @@ VALUES (@pid, @email, @parola, @rol, @aktif);";
 
             using (var cmd = new MySqlCommand(sql, conn, tx))
             {
-                cmd.Parameters.AddWithValue("@pid", u.PersonelId);   // int? kabul eder
+                cmd.Parameters.AddWithValue("@pid", u.PersonelId);   
                 cmd.Parameters.AddWithValue("@email", u.email);
                 cmd.Parameters.AddWithValue("@parola", u.Parola);
                 cmd.Parameters.AddWithValue("@rol", u.Rol);
@@ -73,7 +73,7 @@ VALUES (@pid, @email, @parola, @rol, @aktif);";
             using (MySqlConnection conn = b.BaglantiGetir())
             {
                 const string sql = @"
-SELECT rol
+SELECT role
 FROM users
 WHERE personel_id = @pid AND aktif = 1
 LIMIT 1;";

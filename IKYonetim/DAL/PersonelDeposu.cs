@@ -116,7 +116,6 @@ namespace IKYonetim.DAL
             }
         }
 
-        // 5️⃣ PERSONEL SİL
         public void PersonelSil(int id)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
@@ -130,7 +129,6 @@ namespace IKYonetim.DAL
             }
         }
 
-        // Personelin rolünü users tablosundan getir
         public string PersonelinRolunuGetir(int personelId)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
@@ -190,10 +188,10 @@ namespace IKYonetim.DAL
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
             {
                 string sql = @"
-SELECT id, ad, soyad, departman
-FROM personel
-WHERE (aktif IS NULL OR aktif = 1)
-ORDER BY ad ASC, soyad ASC;";
+                SELECT id, ad, soyad, departman
+                FROM personel
+                WHERE (aktif IS NULL OR aktif = 1)
+                ORDER BY ad ASC, soyad ASC;";
 
                 using (var cmd = new MySqlCommand(sql, conn))
                 using (var dr = cmd.ExecuteReader())
@@ -217,14 +215,14 @@ ORDER BY ad ASC, soyad ASC;";
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
             {
                 string sql = @"
-UPDATE personel
-SET 
-    aktif = @aktif,
-    yillik_izin_hakki = CASE 
-        WHEN @aktif = 1 THEN 14
-        ELSE 0
-    END
-WHERE id = @id;";
+                UPDATE personel
+                SET 
+                aktif = @aktif,
+                yillik_izin_hakki = CASE 
+                WHEN @aktif = 1 THEN 14
+                ELSE 0
+                END
+                WHERE id = @id;";
 
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {

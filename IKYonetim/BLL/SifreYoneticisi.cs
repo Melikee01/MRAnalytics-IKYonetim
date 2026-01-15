@@ -7,7 +7,6 @@ namespace ikYonetimNYPProjesi.BLL
     {
         private readonly SifreDeposu _depo;
 
-        // ✅ Parametresiz constructor (UI artık new SifreYoneticisi() diyebilir)
         public SifreYoneticisi()
         {
             _depo = new SifreDeposu();

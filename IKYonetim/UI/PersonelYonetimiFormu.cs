@@ -39,10 +39,7 @@ namespace IKYonetim.UI
         {
             DepartmanlariDoldur();
 
-            // Varsayılan: sadece aktifleri göster (istersen Designer'da da Checked=true yap)
-            // chkAktif.Checked = true;
-
-            // Grid Stilleri
+            
             dgvPersonel.BackgroundColor = System.Drawing.Color.White;
             dgvPersonel.EnableHeadersVisualStyles = false;
             dgvPersonel.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.Gray;
@@ -77,10 +74,10 @@ namespace IKYonetim.UI
 
         private void ListeyiYenile()
         {
-            // 1) BLL’den tüm listeyi al (N-katmanlı mimari bozulmaz)
+            
             var liste = _yonetici.TumPersonelleriGetir();
 
-            // 2) chkAktif filtre: işaretliyse sadece aktifleri göster
+           
             if (chkAktif.Checked)
                 liste = liste.Where(p => p.Aktif).ToList();
 
@@ -97,7 +94,7 @@ namespace IKYonetim.UI
             if (dgvPersonel.Columns.Contains("Id"))
                 dgvPersonel.Columns["Id"].Visible = false;
 
-            // (Opsiyonel) Pasifler görünüyorsa gri yap (chkAktif kapalıyken)
+           
             if (!chkAktif.Checked && dgvPersonel.Columns.Contains("Aktif"))
             {
                 foreach (DataGridViewRow row in dgvPersonel.Rows)
@@ -153,8 +150,7 @@ namespace IKYonetim.UI
 
         private Personel FormdanOku()
         {
-            // chkAktif filtre olduğu için Aktif'i buradan okumuyoruz.
-            // Güncelleme yaparken seçili personelin mevcut aktifliğini koruyoruz.
+            
             bool mevcutAktif = SeciliPersonelAktifMi();
            
 
@@ -238,7 +234,7 @@ namespace IKYonetim.UI
                 if (onay != DialogResult.Yes)
                     return;
 
-                // Seçili personelin alanlarını al, sadece Aktif=false yap
+               
                 var p = FormdanOku();
                 p.Id = id;
                 p.Aktif = false;

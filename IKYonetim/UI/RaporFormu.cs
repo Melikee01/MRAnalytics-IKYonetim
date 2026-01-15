@@ -70,11 +70,12 @@ namespace IKYonetim.UI
             {
                 PnlMaas.Visible = true;
                 nudAy.Visible = true;
+                nudYil.Visible = true;
             }
 
             if (tip == RaporTipi.IzinHakedisKontrolu)
             {
-                PnlMaas.Visible = true;
+                PnlMaas.Visible = false;
                 nudAy.Visible = false;
             }
 

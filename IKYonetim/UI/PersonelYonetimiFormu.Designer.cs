@@ -54,30 +54,30 @@
             // dgvPersonel
             // 
             this.dgvPersonel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPersonel.Location = new System.Drawing.Point(29, 210);
+            this.dgvPersonel.Location = new System.Drawing.Point(29, 227);
             this.dgvPersonel.Name = "dgvPersonel";
             this.dgvPersonel.ReadOnly = true;
-            this.dgvPersonel.Size = new System.Drawing.Size(713, 211);
+            this.dgvPersonel.Size = new System.Drawing.Size(603, 194);
             this.dgvPersonel.TabIndex = 0;
             this.dgvPersonel.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPersonel_CellClick);
             // 
             // txtAd
             // 
-            this.txtAd.Location = new System.Drawing.Point(29, 46);
+            this.txtAd.Location = new System.Drawing.Point(29, 101);
             this.txtAd.Name = "txtAd";
             this.txtAd.Size = new System.Drawing.Size(100, 20);
             this.txtAd.TabIndex = 1;
             // 
             // txtSoyad
             // 
-            this.txtSoyad.Location = new System.Drawing.Point(164, 46);
+            this.txtSoyad.Location = new System.Drawing.Point(29, 147);
             this.txtSoyad.Name = "txtSoyad";
             this.txtSoyad.Size = new System.Drawing.Size(100, 20);
             this.txtSoyad.TabIndex = 1;
             // 
             // txtPozisyon
             // 
-            this.txtPozisyon.Location = new System.Drawing.Point(295, 46);
+            this.txtPozisyon.Location = new System.Drawing.Point(175, 101);
             this.txtPozisyon.Name = "txtPozisyon";
             this.txtPozisyon.Size = new System.Drawing.Size(100, 20);
             this.txtPozisyon.TabIndex = 1;
@@ -85,7 +85,7 @@
             // cmbDepartman
             // 
             this.cmbDepartman.FormattingEnabled = true;
-            this.cmbDepartman.Location = new System.Drawing.Point(437, 46);
+            this.cmbDepartman.Location = new System.Drawing.Point(313, 101);
             this.cmbDepartman.Name = "cmbDepartman";
             this.cmbDepartman.Size = new System.Drawing.Size(121, 21);
             this.cmbDepartman.TabIndex = 2;
@@ -93,7 +93,7 @@
             // chkAktif
             // 
             this.chkAktif.AutoSize = true;
-            this.chkAktif.Location = new System.Drawing.Point(29, 161);
+            this.chkAktif.Location = new System.Drawing.Point(29, 195);
             this.chkAktif.Name = "chkAktif";
             this.chkAktif.Size = new System.Drawing.Size(134, 17);
             this.chkAktif.TabIndex = 3;
@@ -102,38 +102,41 @@
             // 
             // btnEkle
             // 
-            this.btnEkle.Location = new System.Drawing.Point(29, 99);
+            this.btnEkle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnEkle.Location = new System.Drawing.Point(472, 153);
             this.btnEkle.Name = "btnEkle";
             this.btnEkle.Size = new System.Drawing.Size(75, 23);
             this.btnEkle.TabIndex = 4;
             this.btnEkle.Text = "Ekle";
-            this.btnEkle.UseVisualStyleBackColor = true;
+            this.btnEkle.UseVisualStyleBackColor = false;
             this.btnEkle.Click += new System.EventHandler(this.btnEkle_Click);
             // 
             // btnGuncelle
             // 
-            this.btnGuncelle.Location = new System.Drawing.Point(150, 99);
+            this.btnGuncelle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnGuncelle.Location = new System.Drawing.Point(472, 124);
             this.btnGuncelle.Name = "btnGuncelle";
             this.btnGuncelle.Size = new System.Drawing.Size(75, 23);
             this.btnGuncelle.TabIndex = 4;
             this.btnGuncelle.Text = "Güncelle";
-            this.btnGuncelle.UseVisualStyleBackColor = true;
+            this.btnGuncelle.UseVisualStyleBackColor = false;
             this.btnGuncelle.Click += new System.EventHandler(this.btnGuncelle_Click);
             // 
             // btnSil
             // 
-            this.btnSil.Location = new System.Drawing.Point(268, 99);
+            this.btnSil.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnSil.Location = new System.Drawing.Point(472, 85);
             this.btnSil.Name = "btnSil";
             this.btnSil.Size = new System.Drawing.Size(75, 23);
             this.btnSil.TabIndex = 4;
             this.btnSil.Text = "Sil";
-            this.btnSil.UseVisualStyleBackColor = true;
+            this.btnSil.UseVisualStyleBackColor = false;
             this.btnSil.Click += new System.EventHandler(this.btnSil_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 19);
+            this.label1.Location = new System.Drawing.Point(35, 73);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 13);
             this.label1.TabIndex = 5;
@@ -142,7 +145,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(161, 19);
+            this.label2.Location = new System.Drawing.Point(35, 124);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 5;
@@ -151,7 +154,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(434, 19);
+            this.label3.Location = new System.Drawing.Point(310, 73);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(62, 13);
             this.label3.TabIndex = 5;
@@ -160,7 +163,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(292, 19);
+            this.label4.Location = new System.Drawing.Point(172, 73);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 13);
             this.label4.TabIndex = 6;
@@ -168,7 +171,7 @@
             // 
             // txtemail
             // 
-            this.txtemail.Location = new System.Drawing.Point(437, 101);
+            this.txtemail.Location = new System.Drawing.Point(175, 147);
             this.txtemail.Name = "txtemail";
             this.txtemail.Size = new System.Drawing.Size(100, 20);
             this.txtemail.TabIndex = 7;
@@ -176,7 +179,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(434, 85);
+            this.label6.Location = new System.Drawing.Point(172, 124);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(38, 13);
             this.label6.TabIndex = 9;
@@ -188,7 +191,7 @@
             this.cmbRol.Items.AddRange(new object[] {
             "IK",
             "users"});
-            this.cmbRol.Location = new System.Drawing.Point(599, 46);
+            this.cmbRol.Location = new System.Drawing.Point(313, 146);
             this.cmbRol.Name = "cmbRol";
             this.cmbRol.Size = new System.Drawing.Size(121, 21);
             this.cmbRol.TabIndex = 10;
@@ -196,7 +199,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(599, 19);
+            this.label5.Location = new System.Drawing.Point(321, 130);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 11;
@@ -204,18 +207,21 @@
             // 
             // btnAktifeAl
             // 
-            this.btnAktifeAl.Location = new System.Drawing.Point(258, 137);
+            this.btnAktifeAl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnAktifeAl.Location = new System.Drawing.Point(472, 189);
             this.btnAktifeAl.Name = "btnAktifeAl";
             this.btnAktifeAl.Size = new System.Drawing.Size(75, 23);
             this.btnAktifeAl.TabIndex = 12;
             this.btnAktifeAl.Text = "Geri Yükle";
-            this.btnAktifeAl.UseVisualStyleBackColor = true;
+            this.btnAktifeAl.UseVisualStyleBackColor = false;
             this.btnAktifeAl.Click += new System.EventHandler(this.btnAktifeAl_Click);
             // 
             // PersonelYonetimiFormu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::IKYonetim.Properties.Resources.arkaPlan;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.btnAktifeAl);
             this.Controls.Add(this.label5);
@@ -238,6 +244,7 @@
             this.Name = "PersonelYonetimiFormu";
             this.Text = "PersonelYonetimiFormu";
             ((System.ComponentModel.ISupportInitialize)(this.dgvPersonel)).EndInit();
+            
             this.ResumeLayout(false);
             this.PerformLayout();
 

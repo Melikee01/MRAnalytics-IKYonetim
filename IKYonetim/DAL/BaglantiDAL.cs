@@ -9,10 +9,10 @@ namespace IKYonetim.DAL
 {
     public class baglantiGetir
     {
-        public MySqlConnection BaglantiGetir()
+        public MySqlConnection BaglantiGetir(bool acik = true)
         {
-            MySqlConnection baglanti = new MySqlConnection("Server=172.21.54.253;Port=3306;Database=26_132430031;Uid=26_132430031;Pwd=İnif123.;");
-            baglanti.Open();
+            MySqlConnection baglanti = new MySqlConnection("Server=172.21.54.253;Port=3306;Database=26_132430031;Uid=26_132430031;Pwd=İnif123.;Connection Timeout=5;");
+            if (acik) baglanti.Open();
             return baglanti;
         }
        

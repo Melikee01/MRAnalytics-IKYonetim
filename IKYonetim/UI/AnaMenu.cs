@@ -19,26 +19,27 @@ namespace IKYonetim.UI
             InitializeComponent();
             this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225); // MistyRose
             this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
-            panel1.BackColor = System.Drawing.Color.Silver; 
+            
         }
 
         private void AnaMenu_Load(object sender, EventArgs e)
         {
-            // Kullanıcı bilgisi
             lblKullaniciBilgi.Text =
                 $"Hoşgeldiniz: " +
-                $"{OturumYoneticisi.Email} ({OturumYoneticisi.Rol})";
+                $"{OturumYoneticisi.Email}";
 
-            // Önce hepsini kapat
+            lblrol.Text =
+                $"({OturumYoneticisi.Rol})";
+
+
             btnPersonel.Visible = false;
             btnDeparman.Visible = false;
             btnIzin.Visible = false;
             btnmaas.Visible = false;
             btnPerformans.Visible = false;
             btnRaporlama.Visible = false;
-            btnsifredegis.Visible = true; // herkes şifre değiştirebilir
+            btnsifredegis.Visible = true; 
 
-            // Rol bazlı yetkilendirme
             if (OturumYoneticisi.Rol == "Admin")
             {
                 btnPersonel.Visible = true;
@@ -64,46 +65,47 @@ namespace IKYonetim.UI
 
         private void btnPersonel_Click(object sender, EventArgs e)
         {
-            new PersonelYonetimiFormu().ShowDialog();
+           
+            OpenChildForm(new PersonelYonetimiFormu());
         }
 
         private void btnDeparman_Click(object sender, EventArgs e)
         {
-            new DepartmanYonetimi().ShowDialog();
+            OpenChildForm(new DepartmanYonetimi());
         }
 
         
         private void btnIzin_Click(object sender, EventArgs e)
         {
-            new IzinFormu().ShowDialog(); 
+           
+            OpenChildForm(new IzinFormu());
         }
 
         private void btnmaas_Click(object sender, EventArgs e)
         {
-            new MaasHesaplamaFormu().ShowDialog();
+           
+            OpenChildForm(new MaasHesaplamaFormu());
         }
 
         private void btnPerformans_Click(object sender, EventArgs e)
         {
-            new PerformansFormu().ShowDialog();
+            OpenChildForm(new PerformansFormu());
         }
 
         private void btnRaporlama_Click(object sender, EventArgs e)
         {
-            new RaporFormu().ShowDialog();
+            OpenChildForm(new RaporFormu());
         }
 
         private void btnsifredegis_Click(object sender, EventArgs e)
         {
-            // Not: ENTITY’de de SifreDegistir sınıfı olduğu için,
-            // çakışma ihtimaline karşı tam isimle çağırıyorum.
-            using (var frm = new IKYonetim.UI.SifreDegistirFormu())
+            using (var frm = new SifreDegistirFormu())
             {
                 frm.StartPosition = FormStartPosition.CenterParent;
-                frm.ShowDialog(this); // modal açılır
+                frm.ShowDialog(this);
             }
-
         }
+
 
         private void btnCikıs_Click(object sender, EventArgs e)
         {
@@ -111,6 +113,24 @@ namespace IKYonetim.UI
             new GirisFormu().Show();
             this.Close();
         }
+        Form activeForm = null;
+
+        void OpenChildForm(Form child)
+        {
+            if (activeForm != null)
+                activeForm.Close();
+
+            activeForm = child;
+            child.TopLevel = false;
+            child.FormBorderStyle = FormBorderStyle.None;
+            child.Dock = DockStyle.Fill;
+
+            pnlContent.Controls.Clear();
+            pnlContent.Controls.Add(child);
+            child.Show();
+        }
+
+        
     }
 
 }

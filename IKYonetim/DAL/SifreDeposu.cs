@@ -8,7 +8,7 @@ namespace IKYonetim.DAL
     {
         private readonly baglantiGetir _baglanti = new baglantiGetir();
 
-        // Personelin mevcut şifresini getir
+       
         public string PersonelinSifresiniGetir(int personelId)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
@@ -24,7 +24,7 @@ namespace IKYonetim.DAL
             }
         }
 
-        // Personelin şifresini güncelle
+ 
         public void PersonelinSifresiniGuncelle(int personelId, string yeniSifre)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())

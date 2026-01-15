@@ -30,8 +30,6 @@ namespace IKYonetim.BLL
 
             if (maas.HesaplamaTarihi == default(DateTime))
                 maas.HesaplamaTarihi = DateTime.Now;
-            // Oturumdan hesaplayan kişi ID'si set edilsin (boşsa)
-            
 
 
             _depo.Upsert(maas);

@@ -2,33 +2,29 @@
 using IKYonetim.ENTITY;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace IKYonetim.BLL
 {
     public class IzinYoneticisi
     {
-        private readonly IzinDeposu _izinDal = new IzinDeposu();
+        private readonly IzinDeposu _izinDal;
 
-        // =========================================================
-        // 0) UI UYUMLULUK (KÖPRÜ METOTLAR)
-        // =========================================================
-
-        /// <summary>
-        /// UI tarafında çağırılan "Listele" metodu.
-        /// tumu=true  => tüm izinler (IK/Admin)
-        /// tumu=false => sadece personelin izinleri
-        /// durum doluysa => sadece o durumdaki izinler (örn: "Beklemede")
-        /// </summary>
-        public List<Izin> Listele(int? personelId = null, bool tumu = false, string durum = null)
+        public IzinYoneticisi(IzinDeposu izinDal = null)
         {
-            List<Izin> liste;
+            _izinDal = izinDal ?? new IzinDeposu();
+        }
 
-            if (tumu)
-                liste = TumIzinler();              // rol kontrolü TumIzinler içinde
-            else
-                liste = KendiIzinlerim(personelId);
+        private static bool IsRole(string role, string expected)
+            => string.Equals(role?.Trim(), expected, StringComparison.OrdinalIgnoreCase);
 
-            // ✅ Durum filtresi (DAL'e dokunmadan BLL'de filtre)
+        // ---- ASYNC ----
+        public async Task<List<Izin>> ListeleAsync(int? personelId = null, bool tumu = false, string durum = null)
+        {
+            List<Izin> liste = tumu
+                ? await TumIzinlerAsync()
+                : await KendiIzinlerimAsync(personelId);
+
             if (!string.IsNullOrWhiteSpace(durum))
             {
                 liste = liste.FindAll(x =>
@@ -39,22 +35,15 @@ namespace IKYonetim.BLL
             return liste;
         }
 
-        /// <summary>
-        /// UI tarafında çağırılan "DurumGuncelle" metodu için uyumluluk sağlar.
-        /// </summary>
-        public void DurumGuncelle(int izinId, string yeniDurum)
+        public async Task DurumGuncelleAsync(int izinId, string yeniDurum)
         {
-            IzinDurumuGuncelle(izinId, yeniDurum);
+            await IzinDurumuGuncelleAsync(izinId, yeniDurum);
         }
 
-        // =========================
-        // 1) İZİN TALEBİ OLUŞTUR
-        // =========================
-        public void IzinTalepEt(Izin izin, int personelId = 0)
+        public async Task IzinTalepEtAsync(Izin izin, int personelId = 0)
         {
             if (izin == null) throw new ArgumentNullException(nameof(izin));
 
-            // PersonelId doldurma
             if (personelId > 0)
                 izin.PersonelId = personelId;
 
@@ -62,93 +51,88 @@ namespace IKYonetim.BLL
                 izin.PersonelId = OturumYoneticisi.PersonelId;
 
             if (izin.PersonelId <= 0)
-                throw new Exception("Personel bilgisi bulunamadı (PersonelId boş).");
+                throw new InvalidOperationException("Personel bilgisi bulunamadı (PersonelId boş).");
 
-            // Tarih kontrol
             if (izin.BaslangicTarihi == default || izin.BitisTarihi == default)
-                throw new Exception("Başlangıç ve bitiş tarihi boş olamaz.");
+                throw new ArgumentException("Başlangıç ve bitiş tarihi boş olamaz.");
 
-            if (izin.BitisTarihi < izin.BaslangicTarihi)
-                throw new Exception("Bitiş tarihi, başlangıç tarihinden küçük olamaz.");
+            if (izin.BitisTarihi.Date < izin.BaslangicTarihi.Date)
+                throw new ArgumentException("Bitiş tarihi, başlangıç tarihinden küçük olamaz.");
 
-            // İzin türü kontrol
-            if (string.IsNullOrWhiteSpace(izin.IzinTuru))
-                throw new Exception("İzin türü boş olamaz.");
+            izin.IzinTuru = (izin.IzinTuru ?? string.Empty).Trim();
+            if (izin.IzinTuru.Length == 0)
+                throw new ArgumentException("İzin türü boş olamaz.");
 
-            // Durum default
             if (string.IsNullOrWhiteSpace(izin.Durum))
                 izin.Durum = "Beklemede";
 
-            _izinDal.IzinEkle(izin);
+            await _izinDal.IzinEkleAsync(izin);
         }
 
-        // =========================
-        // 2) KENDİ İZİNLERİM
-        // =========================
-        public List<Izin> KendiIzinlerim(int? personelId = null)
+        public async Task<List<Izin>> KendiIzinlerimAsync(int? personelId = null)
         {
             int pid = personelId ?? OturumYoneticisi.PersonelId;
 
             if (pid <= 0)
-                throw new Exception("PersonelId bulunamadı.");
+                throw new InvalidOperationException("PersonelId bulunamadı.");
 
-            return _izinDal.PersonelinIzinleri(pid);
+            return await _izinDal.PersonelinIzinleriAsync(pid);
         }
 
-        // =========================
-        // 3) TÜM İZİNLER (IK / Admin)
-        // =========================
-        public List<Izin> TumIzinler()
+        public async Task<List<Izin>> TumIzinlerAsync()
         {
             string rol = OturumYoneticisi.Rol;
 
-            if (rol != "Admin" && rol != "IK")
-                throw new Exception("Bu işlem için yetkin yok.");
+            // IK/admin görebilir
+            if (!IsRole(rol, "admin") && !IsRole(rol, "ik"))
+                throw new UnauthorizedAccessException("Bu işlem için yetkin yok.");
 
-            return _izinDal.TumIzinler();
+            return await _izinDal.TumIzinlerAsync();
         }
 
-        // =========================
-        // 4) ONAYLA / REDDET
-        // =========================
-        public void IzinDurumuGuncelle(int izinId, string yeniDurum)
+        public async Task IzinDurumuGuncelleAsync(int izinId, string yeniDurum)
         {
             if (izinId <= 0)
-                throw new Exception("Geçersiz izinId.");
+                throw new ArgumentException("Geçersiz izinId.");
 
-            if (string.IsNullOrWhiteSpace(yeniDurum))
-                throw new Exception("Yeni durum boş olamaz.");
+            yeniDurum = (yeniDurum ?? string.Empty).Trim();
+            if (yeniDurum.Length == 0)
+                throw new ArgumentException("Yeni durum boş olamaz.");
 
-            // ✅ Sadece Admin onay/red yapabilsin (önceki kuralın buydu)
             string rol = OturumYoneticisi.Rol;
-            if (rol != "Admin")
-                throw new Exception("Bu işlem için yetkin yok. (Sadece Admin)");
 
-            // Sadece izin verilen durumlar
+            // sadece admin
+            if (!IsRole(rol, "admin"))
+                throw new UnauthorizedAccessException("Bu işlem için yetkin yok. (Sadece Admin)");
+
             if (yeniDurum != "Beklemede" && yeniDurum != "Onaylandı" && yeniDurum != "Reddedildi")
-                throw new Exception("Geçersiz durum. (Beklemede/Onaylandı/Reddedildi)");
+                throw new ArgumentException("Geçersiz durum. (Beklemede/Onaylandı/Reddedildi)");
 
-            _izinDal.DurumGuncelle(izinId, yeniDurum);
+            await _izinDal.DurumGuncelleAsync(izinId, yeniDurum);
         }
 
-        // =========================
-        // 5) İZİN SİL (Opsiyonel)
-        // =========================
-        public void IzinSil(int izinId)
+        public async Task IzinSilAsync(int izinId)
         {
             if (izinId <= 0)
-                throw new Exception("Geçersiz izinId.");
+                throw new ArgumentException("Geçersiz izinId.");
 
             string rol = OturumYoneticisi.Rol;
-            if (rol != "Admin")
-                throw new Exception("Silme işlemi sadece Admin için.");
 
-            _izinDal.IzinSil(izinId);
+            // sadece admin
+            if (!IsRole(rol, "admin"))
+                throw new UnauthorizedAccessException("Silme işlemi sadece Admin için.");
+
+            await _izinDal.IzinSilAsync(izinId);
         }
+
+        // ---- İstersen eski SYNC metotlar kalsın (mevcut kullanan yer varsa bozulmasın) ----
+        public List<Izin> Listele(int? personelId = null, bool tumu = false, string durum = null)
+            => ListeleAsync(personelId, tumu, durum).GetAwaiter().GetResult();
+
+        public void DurumGuncelle(int izinId, string yeniDurum)
+            => DurumGuncelleAsync(izinId, yeniDurum).GetAwaiter().GetResult();
+
+        public void IzinTalepEt(Izin izin, int personelId = 0)
+            => IzinTalepEtAsync(izin, personelId).GetAwaiter().GetResult();
     }
 }
-
-
-
-
-

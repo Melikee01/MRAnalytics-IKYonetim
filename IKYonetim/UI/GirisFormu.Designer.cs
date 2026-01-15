@@ -83,24 +83,25 @@
             // 
             // btngiris
             // 
+            this.btngiris.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
             this.btngiris.Location = new System.Drawing.Point(84, 180);
             this.btngiris.Name = "btngiris";
             this.btngiris.Size = new System.Drawing.Size(75, 23);
             this.btngiris.TabIndex = 2;
             this.btngiris.Text = "Giriş";
-            this.btngiris.UseVisualStyleBackColor = true;
+            this.btngiris.UseVisualStyleBackColor = false;
             this.btngiris.Click += new System.EventHandler(this.btngiris_Click);
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(195)))), ((int)(((byte)(240)))));
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btngiris);
             this.panel1.Controls.Add(this.txtemail);
             this.panel1.Controls.Add(this.lblsifre);
             this.panel1.Controls.Add(this.txtsifre);
             this.panel1.Controls.Add(this.lblemail);
-            this.panel1.Location = new System.Drawing.Point(244, 76);
+            this.panel1.Location = new System.Drawing.Point(244, 114);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(266, 225);
             this.panel1.TabIndex = 3;
@@ -109,6 +110,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::IKYonetim.Properties.Resources.arkaPlan;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel1);
             this.Name = "GirisFormu";

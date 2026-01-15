@@ -11,7 +11,6 @@ namespace IKYonetim.DAL
     {
         private baglantiGetir _baglanti = new baglantiGetir();
 
-        // INSERT varsa UPDATE (personel_id+yil+ay unique)
         public void Upsert(Maas maas)
         {
 
@@ -60,12 +59,12 @@ aciklama = VALUES(aciklama);";
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
             {
                 string sql = @"
-SELECT id, personel_id, yil, ay,
-       brut_maas, prim, mesai, kesinti_toplam, net_maas,
-       hesaplama_tarihi, hesaplayan_user_id, aciklama
-FROM maas
-WHERE personel_id=@pid
-ORDER BY yil DESC, ay DESC, id DESC;";
+             SELECT id, personel_id, yil, ay,
+             brut_maas, prim, mesai, kesinti_toplam, net_maas,
+             hesaplama_tarihi, hesaplayan_user_id, aciklama
+             FROM maas
+             WHERE personel_id=@pid
+             ORDER BY yil DESC, ay DESC, id DESC;";
 
                 using (var cmd = new MySqlCommand(sql, conn))
                 {
@@ -89,11 +88,11 @@ ORDER BY yil DESC, ay DESC, id DESC;";
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
             {
                 string sql = @"
-SELECT id, personel_id, yil, ay,
-       brut_maas, prim, mesai, kesinti_toplam, net_maas,
-       hesaplama_tarihi, hesaplayan_user_id, aciklama
-FROM maas
-ORDER BY yil DESC, ay DESC, id DESC;";
+            SELECT id, personel_id, yil, ay,
+            brut_maas, prim, mesai, kesinti_toplam, net_maas,
+            hesaplama_tarihi, hesaplayan_user_id, aciklama
+            FROM maas
+            ORDER BY yil DESC, ay DESC, id DESC;";
 
                 using (var cmd = new MySqlCommand(sql, conn))
                 using (var dr = cmd.ExecuteReader())

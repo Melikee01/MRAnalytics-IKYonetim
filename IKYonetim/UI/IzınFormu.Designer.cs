@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.grpTalep = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.dtpBaslangic = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             this.dtpBitis = new System.Windows.Forms.DateTimePicker();
-            this.cmbIzinTuru = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtAciklama = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.btnTalepOlustur = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbIzinTuru = new System.Windows.Forms.ComboBox();
+            this.txtAciklama = new System.Windows.Forms.TextBox();
             this.dgvIzinler = new System.Windows.Forms.DataGridView();
             this.grpAdminOnay = new System.Windows.Forms.GroupBox();
             this.btnOnayla = new System.Windows.Forms.Button();
@@ -52,7 +52,7 @@
             // 
             // grpTalep
             // 
-            this.grpTalep.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.grpTalep.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(195)))), ((int)(((byte)(240)))));
             this.grpTalep.Controls.Add(this.dtpBaslangic);
             this.grpTalep.Controls.Add(this.label1);
             this.grpTalep.Controls.Add(this.dtpBitis);
@@ -62,54 +62,57 @@
             this.grpTalep.Controls.Add(this.label4);
             this.grpTalep.Controls.Add(this.cmbIzinTuru);
             this.grpTalep.Controls.Add(this.txtAciklama);
-            this.grpTalep.Location = new System.Drawing.Point(26, 29);
+            this.grpTalep.Location = new System.Drawing.Point(20, 27);
             this.grpTalep.Name = "grpTalep";
-            this.grpTalep.Size = new System.Drawing.Size(458, 180);
+            this.grpTalep.Size = new System.Drawing.Size(365, 180);
             this.grpTalep.TabIndex = 0;
             this.grpTalep.TabStop = false;
             this.grpTalep.Text = "İzin Talebi";
-            this.grpTalep.Enter += new System.EventHandler(this.grpTalep_Enter);
+            
+            // 
+            // dtpBaslangic
+            // 
+            this.dtpBaslangic.Location = new System.Drawing.Point(144, 84);
+            this.dtpBaslangic.Name = "dtpBaslangic";
+            this.dtpBaslangic.Size = new System.Drawing.Size(200, 20);
+            this.dtpBaslangic.TabIndex = 3;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(235, 12);
+            this.label1.Location = new System.Drawing.Point(141, 68);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Başlangıç Tarihi";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(235, 63);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Bitiş Tarihi";
-            // 
-            // dtpBaslangic
-            // 
-            this.dtpBaslangic.Location = new System.Drawing.Point(238, 28);
-            this.dtpBaslangic.Name = "dtpBaslangic";
-            this.dtpBaslangic.Size = new System.Drawing.Size(200, 20);
-            this.dtpBaslangic.TabIndex = 3;
-            // 
             // dtpBitis
             // 
-            this.dtpBitis.Location = new System.Drawing.Point(238, 81);
+            this.dtpBitis.Location = new System.Drawing.Point(144, 137);
             this.dtpBitis.Name = "dtpBitis";
             this.dtpBitis.Size = new System.Drawing.Size(200, 20);
             this.dtpBitis.TabIndex = 3;
             // 
-            // cmbIzinTuru
+            // btnTalepOlustur
             // 
-            this.cmbIzinTuru.FormattingEnabled = true;
-            this.cmbIzinTuru.Location = new System.Drawing.Point(18, 36);
-            this.cmbIzinTuru.Name = "cmbIzinTuru";
-            this.cmbIzinTuru.Size = new System.Drawing.Size(121, 21);
-            this.cmbIzinTuru.TabIndex = 4;
+            this.btnTalepOlustur.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnTalepOlustur.Location = new System.Drawing.Point(26, 137);
+            this.btnTalepOlustur.Name = "btnTalepOlustur";
+            this.btnTalepOlustur.Size = new System.Drawing.Size(92, 23);
+            this.btnTalepOlustur.TabIndex = 6;
+            this.btnTalepOlustur.Text = "Talep Oluştur";
+            this.btnTalepOlustur.UseVisualStyleBackColor = false;
+            this.btnTalepOlustur.Click += new System.EventHandler(this.btnTalepOlustur_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(141, 121);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Bitiş Tarihi";
             // 
             // label3
             // 
@@ -120,14 +123,6 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "İzin Türü";
             // 
-            // txtAciklama
-            // 
-            this.txtAciklama.Location = new System.Drawing.Point(18, 84);
-            this.txtAciklama.Multiline = true;
-            this.txtAciklama.Name = "txtAciklama";
-            this.txtAciklama.Size = new System.Drawing.Size(100, 20);
-            this.txtAciklama.TabIndex = 5;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -137,15 +132,21 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "Açıklama";
             // 
-            // btnTalepOlustur
+            // cmbIzinTuru
             // 
-            this.btnTalepOlustur.Location = new System.Drawing.Point(26, 137);
-            this.btnTalepOlustur.Name = "btnTalepOlustur";
-            this.btnTalepOlustur.Size = new System.Drawing.Size(92, 23);
-            this.btnTalepOlustur.TabIndex = 6;
-            this.btnTalepOlustur.Text = "Talep Oluştur";
-            this.btnTalepOlustur.UseVisualStyleBackColor = true;
-            this.btnTalepOlustur.Click += new System.EventHandler(this.btnTalepOlustur_Click);
+            this.cmbIzinTuru.FormattingEnabled = true;
+            this.cmbIzinTuru.Location = new System.Drawing.Point(18, 36);
+            this.cmbIzinTuru.Name = "cmbIzinTuru";
+            this.cmbIzinTuru.Size = new System.Drawing.Size(121, 21);
+            this.cmbIzinTuru.TabIndex = 4;
+            // 
+            // txtAciklama
+            // 
+            this.txtAciklama.Location = new System.Drawing.Point(18, 84);
+            this.txtAciklama.Multiline = true;
+            this.txtAciklama.Name = "txtAciklama";
+            this.txtAciklama.Size = new System.Drawing.Size(100, 20);
+            this.txtAciklama.TabIndex = 5;
             // 
             // dgvIzinler
             // 
@@ -155,45 +156,47 @@
             this.dgvIzinler.Name = "dgvIzinler";
             this.dgvIzinler.ReadOnly = true;
             this.dgvIzinler.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvIzinler.Size = new System.Drawing.Size(691, 192);
+            this.dgvIzinler.Size = new System.Drawing.Size(548, 160);
             this.dgvIzinler.TabIndex = 7;
             // 
             // grpAdminOnay
             // 
-            this.grpAdminOnay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.grpAdminOnay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(195)))), ((int)(((byte)(240)))));
             this.grpAdminOnay.Controls.Add(this.btnOnayla);
             this.grpAdminOnay.Controls.Add(this.btnReddet);
-            this.grpAdminOnay.Location = new System.Drawing.Point(490, 29);
+            this.grpAdminOnay.Location = new System.Drawing.Point(397, 29);
             this.grpAdminOnay.Name = "grpAdminOnay";
-            this.grpAdminOnay.Size = new System.Drawing.Size(231, 180);
+            this.grpAdminOnay.Size = new System.Drawing.Size(209, 180);
             this.grpAdminOnay.TabIndex = 8;
             this.grpAdminOnay.TabStop = false;
             this.grpAdminOnay.Text = "Admin Onay / Red";
             // 
             // btnOnayla
             // 
+            this.btnOnayla.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
             this.btnOnayla.Location = new System.Drawing.Point(25, 81);
             this.btnOnayla.Name = "btnOnayla";
             this.btnOnayla.Size = new System.Drawing.Size(75, 67);
             this.btnOnayla.TabIndex = 9;
             this.btnOnayla.Text = "Onayla";
-            this.btnOnayla.UseVisualStyleBackColor = true;
-            this.btnOnayla.Enter += new System.EventHandler(this.btnOnayla_Click);
+            this.btnOnayla.UseVisualStyleBackColor = false;
+            this.btnOnayla.Click += new System.EventHandler(this.btnOnayla_Click);
             // 
             // btnReddet
             // 
-            this.btnReddet.Location = new System.Drawing.Point(131, 81);
+            this.btnReddet.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnReddet.Location = new System.Drawing.Point(116, 82);
             this.btnReddet.Name = "btnReddet";
             this.btnReddet.Size = new System.Drawing.Size(75, 67);
             this.btnReddet.TabIndex = 9;
             this.btnReddet.Text = "Reddet";
-            this.btnReddet.UseVisualStyleBackColor = true;
-            this.btnReddet.Enter += new System.EventHandler(this.btnReddet_Click);
+            this.btnReddet.UseVisualStyleBackColor = false;
+            this.btnReddet.Click += new System.EventHandler(this.btnReddet_Click);
             // 
             // lblMod
             // 
             this.lblMod.AutoSize = true;
-            this.lblMod.Location = new System.Drawing.Point(372, 13);
+            this.lblMod.Location = new System.Drawing.Point(314, 11);
             this.lblMod.Name = "lblMod";
             this.lblMod.Size = new System.Drawing.Size(35, 13);
             this.lblMod.TabIndex = 10;
@@ -227,6 +230,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::IKYonetim.Properties.Resources.arkaPlan;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(798, 469);
             this.Controls.Add(this.chkBekleyenler);
             this.Controls.Add(this.chkTumIzinler);

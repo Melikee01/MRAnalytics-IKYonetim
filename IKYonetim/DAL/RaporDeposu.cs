@@ -25,7 +25,7 @@ ORDER BY CalisanSayisi DESC, Departman ASC;";
 
         public DataTable IzinRaporuGetir(DateTime baslangic, DateTime bitis)
         {
-            // ✅ Sende kolon adları baslangic / bitis olmalı
+            
             string sql = @"
 SELECT
     lr.id AS IzinId,
@@ -123,7 +123,7 @@ SELECT * FROM (
 
         public DataTable IzinHakedisKontroluGetir(int yil)
         {
-            // ✅ Sende kolon adları baslangic / bitis olmalı
+            
             string sql = @"
 SELECT
     p.id AS PersonelId,

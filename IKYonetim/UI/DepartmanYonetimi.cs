@@ -2,16 +2,10 @@
 using IKYonetim.ENTITY;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IKYonetim.UI
-
 {
     public partial class DepartmanYonetimi : Form
     {
@@ -24,18 +18,15 @@ namespace IKYonetim.UI
 
         private void DepartmanYonetimi_Load(object sender, EventArgs e)
         {
+            btnAktifeAl.Enabled = false;
             ListeyiYenile();
         }
+
         private void ListeyiYenile()
         {
-            List<Departman> liste;
-
-            // Pasifler dahil tüm departmanlar
-            if (chkPasifleriGoster.Checked)
-                liste = _yonetici.TumDepartmanlar();
-            else
-                // Yalnızca aktif departmanlar
-                liste = _yonetici.AktifDepartmanlariGetir();
+            List<Departman> liste = chkPasifleriGoster.Checked
+                ? _yonetici.TumDepartmanlar()
+                : _yonetici.AktifDepartmanlariGetir();
 
             dgvDepartman.DataSource = null;
             dgvDepartman.DataSource = liste;
@@ -46,9 +37,10 @@ namespace IKYonetim.UI
 
             if (dgvDepartman.Columns.Contains("Id"))
                 dgvDepartman.Columns["Id"].Visible = false;
-            PasifSatirlariGriYap();
-        }
 
+            SatirStilleriniUygula();
+            SecimeGoreButonlariAyarla();
+        }
 
         private int SeciliId()
         {
@@ -56,10 +48,34 @@ namespace IKYonetim.UI
             return Convert.ToInt32(dgvDepartman.CurrentRow.Cells["Id"].Value);
         }
 
+        private Departman SeciliDepartman()
+        {
+            return dgvDepartman.CurrentRow?.DataBoundItem as Departman;
+        }
+
         private void dgvDepartman_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvDepartman.CurrentRow == null) return;
-            txtDepartmanAdi.Text = Convert.ToString(dgvDepartman.CurrentRow.Cells["DepartmanAdi"].Value);
+            var d = SeciliDepartman();
+            if (d == null) return;
+
+            txtDepartmanAdi.Text = d.DepartmanAdi;
+            SecimeGoreButonlariAyarla();
+        }
+
+        private void SecimeGoreButonlariAyarla()
+        {
+            var d = SeciliDepartman();
+            if (d == null)
+            {
+                btnAktifeAl.Enabled = false;
+                btnPasifeAl.Enabled = false;
+                btnGuncelle.Enabled = false;
+                return;
+            }
+
+            btnGuncelle.Enabled = true;
+            btnPasifeAl.Enabled = d.Aktif;     
+            btnAktifeAl.Enabled = !d.Aktif;    
         }
 
         private void btnEkle_Click(object sender, EventArgs e)
@@ -92,9 +108,49 @@ namespace IKYonetim.UI
 
         private void btnPasifeAl_Click(object sender, EventArgs e)
         {
-            int id = SeciliId();
-            _yonetici.DepartmanPasifeAl(id);
-            ListeyiYenile();
+            try
+            {
+                int id = SeciliId();
+                if (id <= 0)
+                {
+                    MessageBox.Show("Lütfen bir departman seçin.");
+                    return;
+                }
+
+                _yonetici.DepartmanPasifeAl(id);
+                ListeyiYenile();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnAktifeAl_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var secili = SeciliDepartman();
+                if (secili == null)
+                {
+                    MessageBox.Show("Lütfen bir departman seçin.");
+                    return;
+                }
+
+                if (secili.Aktif)
+                {
+                    MessageBox.Show("Bu departman zaten aktif.");
+                    return;
+                }
+
+                _yonetici.DepartmanAktifeAl(secili.Id);
+                ListeyiYenile();
+                MessageBox.Show("Departman tekrar aktife alındı.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void chkPasifleriGoster_CheckedChanged(object sender, EventArgs e)
@@ -102,55 +158,29 @@ namespace IKYonetim.UI
             ListeyiYenile();
         }
 
+        private void SatirStilleriniUygula()
+        {
+           
+            foreach (DataGridViewRow row in dgvDepartman.Rows)
+            {
+                row.DefaultCellStyle.ForeColor = dgvDepartman.DefaultCellStyle.ForeColor;
+                row.DefaultCellStyle.Font = dgvDepartman.Font;
+            }
 
-        private void dgvDepartman_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dgvDepartman.CurrentRow?.DataBoundItem is Departman d)
-                btnAktifeAl.Enabled = !d.Aktif;
-            else
-                btnAktifeAl.Enabled = false;
-        }
-        private void PasifSatirlariGriYap()
-        {
+            
             foreach (DataGridViewRow row in dgvDepartman.Rows)
             {
                 if (row.DataBoundItem is Departman departman && !departman.Aktif)
                 {
                     row.DefaultCellStyle.ForeColor = Color.Gray;
-                    row.DefaultCellStyle.Font = new Font(
-                        dgvDepartman.Font,
-                        FontStyle.Italic
-                    );
+                    row.DefaultCellStyle.Font = new Font(dgvDepartman.Font, FontStyle.Italic);
                 }
             }
         }
-
-        private void btnAktifeAl_Click(object sender, EventArgs e)
+        
+        private void dgvDepartman_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvDepartman.CurrentRow == null)
-            {
-                MessageBox.Show("Lütfen bir departman seçin.");
-                return;
-            }
-
-            var secili = dgvDepartman.CurrentRow.DataBoundItem as Departman;
-
-            if (secili == null)
-            {
-                MessageBox.Show("Seçim okunamadı.");
-                return;
-            }
-
-            if (secili.Aktif)
-            {
-                MessageBox.Show("Bu departman zaten aktif.");
-                return;
-            }
-
-            _yonetici.DepartmanAktifeAl(secili.Id);
-            ListeyiYenile();
-            MessageBox.Show("Departman tekrar aktife alındı.");
+            
         }
-
     }
 }

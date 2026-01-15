@@ -74,20 +74,20 @@ namespace IKYonetim.BLL
             {
                 try
                 {
-                    // 1) email kontrol
+                    
                     if (_usersDeposu.EmailVarMi(email, conn, tx))
                         throw new Exception("Bu e-mail ile kayıtlı kullanıcı zaten var.");
 
-                    // 2) personel ekle + id al
+                   
                     int personelId = _personelDeposu.PersonelEkleVeIdDondur(p, conn, tx);
 
-                    // 3) users ekle
+                    
                     Users u = new Users
                     {
                         PersonelId = personelId,
                         email = email,
-                        Parola = "1234",  // başlangıç şifresi
-                        Rol = rol,        // "Admin" | "IK" | "User"
+                        Parola = "1234",
+                        Rol = rol,        
                         Aktif = true
                     };
 

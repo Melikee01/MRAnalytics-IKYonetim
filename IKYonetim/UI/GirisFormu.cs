@@ -9,9 +9,7 @@ namespace IKYonetim.UI
         public GirisFormu()
         {
             InitializeComponent();
-            this.BackColor = System.Drawing.Color.FromArgb(255, 228, 225); // MistyRose
-            this.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Regular);
-            panel1.BackColor = System.Drawing.Color.Silver;
+           
         }
 
         private void btngiris_Click(object sender, EventArgs e)
@@ -27,8 +25,6 @@ namespace IKYonetim.UI
                 return;
             }
 
-            // Debug için istersen:
-            // MessageBox.Show("Rol: " + OturumYoneticisi.Rol + " | PersonelId: " + OturumYoneticisi.PersonelId);
 
             new AnaMenu().Show();
             this.Hide();

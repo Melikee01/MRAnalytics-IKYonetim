@@ -10,24 +10,25 @@ namespace IKYonetim.BLL
         private readonly PerformansDeposu _depo = new PerformansDeposu();
         private readonly PersonelDeposu _PersonelDeposu = new PersonelDeposu();
 
+        private static bool IsRole(string role, string expected)
+            => string.Equals(role?.Trim(), expected, StringComparison.OrdinalIgnoreCase);
+
+        private static bool AdminMi() => IsRole(OturumYoneticisi.Rol, "Admin");
+        private static bool IkMi() => IsRole(OturumYoneticisi.Rol, "IK");
+
         public void PerformansEkle(Performans p)
         {
             if (p.PersonelId <= 0) throw new Exception("Personel seçilmedi.");
             if (p.DegerlendirenId <= 0) throw new Exception("Değerlendiren bilgisi zorunlu.");
             if (p.Puan < 1 || p.Puan > 100) throw new Exception("Puan 1-100 arasında olmalı.");
-           
-            // NOT: Bu kontrol ancak DegerlendirenId de personel_id ise anlamlıdır.
-            // Senin senaryonda DegerlendirenId = users.id olma ihtimali yüksek.
-            // Yine de kalsın istiyorsan kalsın; sorun çıkarırsa kaldırırız.
+
             if (p.PersonelId == p.DegerlendirenId)
                 throw new Exception("Kendi kendini değerlendiremezsiniz.");
 
-            // IK → Admin/IK değerlendiremesin (IK sadece users değerlendirsin)
-            if (string.Equals(OturumYoneticisi.Rol, "IK", StringComparison.OrdinalIgnoreCase))
+            
+            if (IkMi())
             {
                 var hedefRol = _PersonelDeposu.PersonelinRolunuGetir(p.PersonelId);
-
-                // Kullanıcı kaydı yoksa, normal personel gibi davran (users kabul et)
                 if (string.IsNullOrWhiteSpace(hedefRol))
                     hedefRol = "users";
 
@@ -45,11 +46,27 @@ namespace IKYonetim.BLL
             if (p.DegerlendirenId <= 0) throw new Exception("Değerlendiren bilgisi zorunlu.");
             if (p.Puan < 1 || p.Puan > 100) throw new Exception("Puan 1-100 arasında olmalı.");
 
-            // NOT: Yukarıdaki not burada da geçerli
             if (p.PersonelId == p.DegerlendirenId)
                 throw new Exception("Kendi kendini değerlendiremezsiniz.");
 
-            if (string.Equals(OturumYoneticisi.Rol, "IK", StringComparison.OrdinalIgnoreCase))
+           
+            var eskiKayit = _depo.PerformansGetirById(p.Id);
+            if (eskiKayit == null)
+                throw new Exception("Kayıt bulunamadı.");
+
+            
+            if (!AdminMi())
+            {
+               
+                if (!IkMi())
+                    throw new Exception("Bu işlem için yetkin yok.");
+
+                if (eskiKayit.DegerlendirenId != OturumYoneticisi.PersonelId)
+                    throw new Exception("Admin tarafından girilen değerlendirmeyi İK güncelleyemez. Sadece kendi değerlendirdiğini güncelleyebilir.");
+            }
+
+            
+            if (IkMi())
             {
                 var hedefRol = _PersonelDeposu.PersonelinRolunuGetir(p.PersonelId);
 
@@ -82,19 +99,18 @@ namespace IKYonetim.BLL
             if (kayit == null)
                 throw new Exception("Kayıt bulunamadı.");
 
-            // Admin her şeyi silebilsin istiyorsan bu blok kalsın.
-            // Admin de sadece kendi kaydını silebilsin dersen bu bloğu kaldır.
-            if (string.Equals(OturumYoneticisi.Rol, "Admin", StringComparison.OrdinalIgnoreCase))
+            
+            if (AdminMi())
             {
                 _depo.PerformansPasifeAl(performansId);
                 return;
             }
 
-            // Yetki: sadece kendi yazdığı değerlendirmeyi silebilir
-            // DegerlendirenId = users.id, OturumYoneticisi.Id = users.id
-            if (kayit.DegerlendirenId != OturumYoneticisi.PersonelId)
-                throw new Exception("Bu performansı silemezsiniz. Sadece değerlendirmeyi yapan kişi silebilir.");
+            if (!IkMi())
+                throw new Exception("Bu işlem için yetkin yok.");
 
+            if (kayit.DegerlendirenId != OturumYoneticisi.PersonelId)
+                throw new Exception("Admin tarafından girilen değerlendirmeyi İK silemez. Sadece kendi değerlendirdiğini silebilir.");
 
             _depo.PerformansPasifeAl(performansId);
         }

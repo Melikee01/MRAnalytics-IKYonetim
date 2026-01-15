@@ -42,25 +42,25 @@
             // dgvDepartman
             // 
             this.dgvDepartman.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDepartman.Location = new System.Drawing.Point(53, 176);
+            this.dgvDepartman.Location = new System.Drawing.Point(30, 165);
             this.dgvDepartman.Name = "dgvDepartman";
-            this.dgvDepartman.Size = new System.Drawing.Size(460, 224);
+            this.dgvDepartman.Size = new System.Drawing.Size(483, 169);
             this.dgvDepartman.TabIndex = 0;
             this.dgvDepartman.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDepartman_CellContentClick);
             this.dgvDepartman.SelectionChanged += new System.EventHandler(this.dgvDepartman_SelectionChanged);
             // 
             // txtDepartmanAdi
             // 
-            this.txtDepartmanAdi.Location = new System.Drawing.Point(50, 68);
+            this.txtDepartmanAdi.Location = new System.Drawing.Point(30, 106);
             this.txtDepartmanAdi.Name = "txtDepartmanAdi";
             this.txtDepartmanAdi.Size = new System.Drawing.Size(100, 20);
             this.txtDepartmanAdi.TabIndex = 1;
             // 
             // btnEkle
             // 
-            this.btnEkle.Location = new System.Drawing.Point(221, 66);
+            this.btnEkle.Location = new System.Drawing.Point(217, 97);
             this.btnEkle.Name = "btnEkle";
-            this.btnEkle.Size = new System.Drawing.Size(75, 60);
+            this.btnEkle.Size = new System.Drawing.Size(75, 36);
             this.btnEkle.TabIndex = 2;
             this.btnEkle.Text = "Ekle";
             this.btnEkle.UseVisualStyleBackColor = true;
@@ -68,9 +68,9 @@
             // 
             // btnGuncelle
             // 
-            this.btnGuncelle.Location = new System.Drawing.Point(331, 66);
+            this.btnGuncelle.Location = new System.Drawing.Point(352, 97);
             this.btnGuncelle.Name = "btnGuncelle";
-            this.btnGuncelle.Size = new System.Drawing.Size(75, 60);
+            this.btnGuncelle.Size = new System.Drawing.Size(75, 36);
             this.btnGuncelle.TabIndex = 2;
             this.btnGuncelle.Text = "Güncelle";
             this.btnGuncelle.UseVisualStyleBackColor = true;
@@ -78,7 +78,7 @@
             // 
             // btnPasifeAl
             // 
-            this.btnPasifeAl.Location = new System.Drawing.Point(450, 68);
+            this.btnPasifeAl.Location = new System.Drawing.Point(80, 351);
             this.btnPasifeAl.Name = "btnPasifeAl";
             this.btnPasifeAl.Size = new System.Drawing.Size(75, 58);
             this.btnPasifeAl.TabIndex = 2;
@@ -89,7 +89,7 @@
             // chkPasifleriGoster
             // 
             this.chkPasifleriGoster.AutoSize = true;
-            this.chkPasifleriGoster.Location = new System.Drawing.Point(54, 153);
+            this.chkPasifleriGoster.Location = new System.Drawing.Point(30, 142);
             this.chkPasifleriGoster.Name = "chkPasifleriGoster";
             this.chkPasifleriGoster.Size = new System.Drawing.Size(96, 17);
             this.chkPasifleriGoster.TabIndex = 3;
@@ -100,7 +100,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(50, 49);
+            this.label1.Location = new System.Drawing.Point(27, 80);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 4;
@@ -108,7 +108,7 @@
             // 
             // btnAktifeAl
             // 
-            this.btnAktifeAl.Location = new System.Drawing.Point(585, 68);
+            this.btnAktifeAl.Location = new System.Drawing.Point(330, 351);
             this.btnAktifeAl.Name = "btnAktifeAl";
             this.btnAktifeAl.Size = new System.Drawing.Size(75, 58);
             this.btnAktifeAl.TabIndex = 5;
@@ -120,6 +120,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::IKYonetim.Properties.Resources.arkaPlan;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.btnAktifeAl);
             this.Controls.Add(this.label1);

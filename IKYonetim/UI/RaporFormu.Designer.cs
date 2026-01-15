@@ -53,19 +53,20 @@
             // cmbRapor
             // 
             this.cmbRapor.FormattingEnabled = true;
-            this.cmbRapor.Location = new System.Drawing.Point(6, 19);
+            this.cmbRapor.Location = new System.Drawing.Point(56, 8);
             this.cmbRapor.Name = "cmbRapor";
             this.cmbRapor.Size = new System.Drawing.Size(121, 21);
             this.cmbRapor.TabIndex = 0;
             // 
             // btnGetir
             // 
-            this.btnGetir.Location = new System.Drawing.Point(6, 61);
+            this.btnGetir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnGetir.Location = new System.Drawing.Point(77, 46);
             this.btnGetir.Name = "btnGetir";
             this.btnGetir.Size = new System.Drawing.Size(75, 23);
             this.btnGetir.TabIndex = 1;
             this.btnGetir.Text = "Raporu Getir";
-            this.btnGetir.UseVisualStyleBackColor = true;
+            this.btnGetir.UseVisualStyleBackColor = false;
             this.btnGetir.Click += new System.EventHandler(this.btnGetir_Click);
             // 
             // dgvRapor
@@ -73,17 +74,17 @@
             this.dgvRapor.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRapor.Location = new System.Drawing.Point(23, 148);
             this.dgvRapor.Name = "dgvRapor";
-            this.dgvRapor.Size = new System.Drawing.Size(736, 150);
+            this.dgvRapor.Size = new System.Drawing.Size(563, 150);
             this.dgvRapor.TabIndex = 2;
             // 
             // grpFiltre
             // 
-            this.grpFiltre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.grpFiltre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(195)))), ((int)(((byte)(240)))));
             this.grpFiltre.Controls.Add(this.cmbRapor);
             this.grpFiltre.Controls.Add(this.btnGetir);
-            this.grpFiltre.Location = new System.Drawing.Point(241, 12);
+            this.grpFiltre.Location = new System.Drawing.Point(288, 25);
             this.grpFiltre.Name = "grpFiltre";
-            this.grpFiltre.Size = new System.Drawing.Size(251, 130);
+            this.grpFiltre.Size = new System.Drawing.Size(251, 80);
             this.grpFiltre.TabIndex = 3;
             this.grpFiltre.TabStop = false;
             this.grpFiltre.Text = "Filtreler";
@@ -148,11 +149,11 @@
             // 
             // pnlTarih
             // 
-            this.pnlTarih.BackColor = System.Drawing.Color.Silver;
+            this.pnlTarih.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(195)))), ((int)(((byte)(240)))));
             this.pnlTarih.Controls.Add(this.label2);
             this.pnlTarih.Controls.Add(this.dtBit);
             this.pnlTarih.Controls.Add(this.dtBas);
-            this.pnlTarih.Location = new System.Drawing.Point(409, 332);
+            this.pnlTarih.Location = new System.Drawing.Point(318, 322);
             this.pnlTarih.Name = "pnlTarih";
             this.pnlTarih.Size = new System.Drawing.Size(238, 100);
             this.pnlTarih.TabIndex = 4;
@@ -168,13 +169,13 @@
             // 
             // PnlMaas
             // 
-            this.PnlMaas.BackColor = System.Drawing.Color.Silver;
+            this.PnlMaas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(195)))), ((int)(((byte)(240)))));
             this.PnlMaas.Controls.Add(this.label4);
             this.PnlMaas.Controls.Add(this.label3);
             this.PnlMaas.Controls.Add(this.label1);
             this.PnlMaas.Controls.Add(this.nudAy);
             this.PnlMaas.Controls.Add(this.nudYil);
-            this.PnlMaas.Location = new System.Drawing.Point(140, 332);
+            this.PnlMaas.Location = new System.Drawing.Point(23, 319);
             this.PnlMaas.Name = "PnlMaas";
             this.PnlMaas.Size = new System.Drawing.Size(215, 100);
             this.PnlMaas.TabIndex = 5;
@@ -210,6 +211,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::IKYonetim.Properties.Resources.arkaPlan;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.PnlMaas);
             this.Controls.Add(this.pnlTarih);

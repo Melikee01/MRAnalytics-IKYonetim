@@ -57,7 +57,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(56, 38);
+            this.label1.Location = new System.Drawing.Point(12, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 0;
@@ -66,7 +66,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(297, 33);
+            this.label2.Location = new System.Drawing.Point(221, 33);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(30, 13);
             this.label2.TabIndex = 0;
@@ -75,7 +75,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(487, 37);
+            this.label3.Location = new System.Drawing.Point(405, 36);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 13);
             this.label3.TabIndex = 0;
@@ -84,7 +84,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(59, 86);
+            this.label4.Location = new System.Drawing.Point(9, 69);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 0;
@@ -92,28 +92,28 @@
             // 
             // txtBrut
             // 
-            this.txtBrut.Location = new System.Drawing.Point(150, 30);
+            this.txtBrut.Location = new System.Drawing.Point(76, 30);
             this.txtBrut.Name = "txtBrut";
             this.txtBrut.Size = new System.Drawing.Size(100, 20);
             this.txtBrut.TabIndex = 1;
             // 
             // txtPrim
             // 
-            this.txtPrim.Location = new System.Drawing.Point(346, 30);
+            this.txtPrim.Location = new System.Drawing.Point(273, 30);
             this.txtPrim.Name = "txtPrim";
             this.txtPrim.Size = new System.Drawing.Size(100, 20);
             this.txtPrim.TabIndex = 1;
             // 
             // txtMesai
             // 
-            this.txtMesai.Location = new System.Drawing.Point(535, 33);
+            this.txtMesai.Location = new System.Drawing.Point(449, 33);
             this.txtMesai.Name = "txtMesai";
             this.txtMesai.Size = new System.Drawing.Size(100, 20);
             this.txtMesai.TabIndex = 1;
             // 
             // txtKesinti
             // 
-            this.txtKesinti.Location = new System.Drawing.Point(150, 86);
+            this.txtKesinti.Location = new System.Drawing.Point(76, 69);
             this.txtKesinti.Name = "txtKesinti";
             this.txtKesinti.Size = new System.Drawing.Size(100, 20);
             this.txtKesinti.TabIndex = 1;
@@ -121,7 +121,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(487, 93);
+            this.label6.Location = new System.Drawing.Point(422, 81);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(21, 13);
             this.label6.TabIndex = 3;
@@ -130,7 +130,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(59, 146);
+            this.label7.Location = new System.Drawing.Point(12, 113);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(22, 13);
             this.label7.TabIndex = 3;
@@ -139,7 +139,7 @@
             // cmbYil
             // 
             this.cmbYil.FormattingEnabled = true;
-            this.cmbYil.Location = new System.Drawing.Point(514, 93);
+            this.cmbYil.Location = new System.Drawing.Point(449, 78);
             this.cmbYil.Name = "cmbYil";
             this.cmbYil.Size = new System.Drawing.Size(121, 21);
             this.cmbYil.TabIndex = 4;
@@ -147,7 +147,7 @@
             // cmbAy
             // 
             this.cmbAy.FormattingEnabled = true;
-            this.cmbAy.Location = new System.Drawing.Point(129, 143);
+            this.cmbAy.Location = new System.Drawing.Point(76, 113);
             this.cmbAy.Name = "cmbAy";
             this.cmbAy.Size = new System.Drawing.Size(121, 21);
             this.cmbAy.TabIndex = 4;
@@ -155,7 +155,7 @@
             // lblNetMaas
             // 
             this.lblNetMaas.AutoSize = true;
-            this.lblNetMaas.Location = new System.Drawing.Point(317, 151);
+            this.lblNetMaas.Location = new System.Drawing.Point(248, 121);
             this.lblNetMaas.Name = "lblNetMaas";
             this.lblNetMaas.Size = new System.Drawing.Size(56, 13);
             this.lblNetMaas.TabIndex = 5;
@@ -163,32 +163,35 @@
             // 
             // btnHesapla
             // 
-            this.btnHesapla.Location = new System.Drawing.Point(578, 188);
+            this.btnHesapla.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnHesapla.Location = new System.Drawing.Point(324, 153);
             this.btnHesapla.Name = "btnHesapla";
             this.btnHesapla.Size = new System.Drawing.Size(75, 23);
             this.btnHesapla.TabIndex = 6;
             this.btnHesapla.Text = "Hesapla";
-            this.btnHesapla.UseVisualStyleBackColor = true;
+            this.btnHesapla.UseVisualStyleBackColor = false;
             this.btnHesapla.Click += new System.EventHandler(this.btnHesapla_Click);
             // 
             // btnKaydet
             // 
-            this.btnKaydet.Location = new System.Drawing.Point(460, 188);
+            this.btnKaydet.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnKaydet.Location = new System.Drawing.Point(324, 116);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(75, 23);
             this.btnKaydet.TabIndex = 6;
             this.btnKaydet.Text = "Kaydet";
-            this.btnKaydet.UseVisualStyleBackColor = true;
+            this.btnKaydet.UseVisualStyleBackColor = false;
             this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
             // 
             // btnListele
             // 
-            this.btnListele.Location = new System.Drawing.Point(320, 188);
+            this.btnListele.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnListele.Location = new System.Drawing.Point(449, 113);
             this.btnListele.Name = "btnListele";
             this.btnListele.Size = new System.Drawing.Size(75, 23);
             this.btnListele.TabIndex = 6;
             this.btnListele.Text = "Listele";
-            this.btnListele.UseVisualStyleBackColor = true;
+            this.btnListele.UseVisualStyleBackColor = false;
             this.btnListele.Click += new System.EventHandler(this.btnListele_Click);
             // 
             // dgvMaaslar
@@ -199,13 +202,13 @@
             this.dgvMaaslar.Name = "dgvMaaslar";
             this.dgvMaaslar.ReadOnly = true;
             this.dgvMaaslar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvMaaslar.Size = new System.Drawing.Size(852, 150);
+            this.dgvMaaslar.Size = new System.Drawing.Size(593, 150);
             this.dgvMaaslar.TabIndex = 7;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(696, 38);
+            this.label8.Location = new System.Drawing.Point(17, 158);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 13);
             this.label8.TabIndex = 8;
@@ -213,16 +216,16 @@
             // 
             // txtAciklama
             // 
-            this.txtAciklama.Location = new System.Drawing.Point(755, 33);
+            this.txtAciklama.Location = new System.Drawing.Point(76, 155);
             this.txtAciklama.Multiline = true;
             this.txtAciklama.Name = "txtAciklama";
-            this.txtAciklama.Size = new System.Drawing.Size(100, 131);
+            this.txtAciklama.Size = new System.Drawing.Size(100, 81);
             this.txtAciklama.TabIndex = 9;
             // 
             // cmbPersonel
             // 
             this.cmbPersonel.FormattingEnabled = true;
-            this.cmbPersonel.Location = new System.Drawing.Point(336, 93);
+            this.cmbPersonel.Location = new System.Drawing.Point(278, 73);
             this.cmbPersonel.Name = "cmbPersonel";
             this.cmbPersonel.Size = new System.Drawing.Size(121, 21);
             this.cmbPersonel.TabIndex = 11;
@@ -230,7 +233,7 @@
             // lblPersonel
             // 
             this.lblPersonel.AutoSize = true;
-            this.lblPersonel.Location = new System.Drawing.Point(279, 93);
+            this.lblPersonel.Location = new System.Drawing.Point(221, 76);
             this.lblPersonel.Name = "lblPersonel";
             this.lblPersonel.Size = new System.Drawing.Size(51, 13);
             this.lblPersonel.TabIndex = 12;
@@ -238,18 +241,21 @@
             // 
             // btnSil
             // 
-            this.btnSil.Location = new System.Drawing.Point(699, 188);
+            this.btnSil.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(152)))), ((int)(((byte)(238)))));
+            this.btnSil.Location = new System.Drawing.Point(449, 153);
             this.btnSil.Name = "btnSil";
             this.btnSil.Size = new System.Drawing.Size(75, 23);
             this.btnSil.TabIndex = 13;
             this.btnSil.Text = "Sil";
-            this.btnSil.UseVisualStyleBackColor = true;
+            this.btnSil.UseVisualStyleBackColor = false;
             this.btnSil.Click += new System.EventHandler(this.btnSil_Click);
             // 
             // MaasHesaplamaFormu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::IKYonetim.Properties.Resources.arkaPlan;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(896, 450);
             this.Controls.Add(this.btnSil);
             this.Controls.Add(this.lblPersonel);

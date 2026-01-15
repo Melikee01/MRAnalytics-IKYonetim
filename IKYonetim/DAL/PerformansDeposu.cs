@@ -11,7 +11,6 @@ namespace IKYonetim.DAL
     {
         private baglantiGetir _baglanti = new baglantiGetir();
 
-        // 1) TÜM PERFORMANSLARI GETİR
         public List<Performans> TumPerformanslariGetir()
         {
             var liste = new List<Performans>();
@@ -36,7 +35,6 @@ namespace IKYonetim.DAL
             return liste;
         }
 
-        // 2) PERSONELE GÖRE PERFORMANSLARI GETİR
         public List<Performans> PersonelinPerformanslariniGetir(int personelId)
         {
             var liste = new List<Performans>();
@@ -65,7 +63,6 @@ namespace IKYonetim.DAL
             return liste;
         }
 
-        // 3) PERFORMANS EKLE
         public void PerformansEkle(Performans p)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
@@ -86,7 +83,6 @@ namespace IKYonetim.DAL
             }
         }
 
-        // 4) PERFORMANS GÜNCELLE
         public void PerformansGuncelle(Performans p)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
@@ -113,7 +109,6 @@ namespace IKYonetim.DAL
             }
         }
 
-        // 5) (İSTEĞE BAĞLI) PERFORMANS SİL
         public void PerformansSil(int id)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())
@@ -127,8 +122,6 @@ namespace IKYonetim.DAL
             }
         }
 
-        // 6) FİLTRELİ LİSTE (Rapor ekranında çok işine yarar)
-        // Hepsi nullable: göndermediğin filtre uygulanmaz.
         public List<Performans> PerformansFiltrele(int? personelId, DateTime? baslangic, DateTime? bitis, int? minPuan, int? maxPuan)
         {
             var liste = new List<Performans>();
@@ -191,7 +184,6 @@ namespace IKYonetim.DAL
             return liste;
         }
 
-        // --- Helper: DataReader -> Entity
         private Performans MapPerformans(MySqlDataReader dr)
         {
             return new Performans
@@ -204,7 +196,6 @@ namespace IKYonetim.DAL
                 DegerlendirenId = dr["degerlendiren_id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["degerlendiren_id"])
             };
         }
-        // 0) ID'YE GÖRE TEK PERFORMANS GETİR (Yetki kontrolü için lazım)
         public Performans PerformansGetirById(int id)
         {
             using (MySqlConnection conn = _baglanti.BaglantiGetir())

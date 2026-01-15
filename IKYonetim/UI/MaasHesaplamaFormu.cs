@@ -38,7 +38,7 @@ namespace IKYonetim.UI
 
 
             cmbYil.Items.Clear();
-            for (int yil = 2020; yil <= 2030; yil++)
+            for (int yil = 2023; yil <= 2030; yil++)
                 cmbYil.Items.Add(yil);
 
 
@@ -233,8 +233,7 @@ namespace IKYonetim.UI
                     x.BrutMaas,
                     x.Prim,
                     x.Mesai,
-                    Kesinti = x.KesintiToplam,   // sende KesintiToplam
-                    x.HesaplamaTarihi,
+                    Kesinti = x.KesintiToplam, 
                     x.Aciklama
                 });
             }

@@ -2,6 +2,8 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace IKYonetim.DAL
 {
@@ -9,12 +11,22 @@ namespace IKYonetim.DAL
     {
         private readonly baglantiGetir _baglanti = new baglantiGetir();
 
-        // 1) İZİN EKLE
-        public void IzinEkle(Izin izin)
+        // ---- SYNC (istersen kalsın) ----
+        public void IzinEkle(Izin izin) => IzinEkleAsync(izin).GetAwaiter().GetResult();
+        public List<Izin> PersonelinIzinleri(int personelId) => PersonelinIzinleriAsync(personelId).GetAwaiter().GetResult();
+        public List<Izin> TumIzinler() => TumIzinlerAsync().GetAwaiter().GetResult();
+        public void DurumGuncelle(int izinId, string yeniDurum) => DurumGuncelleAsync(izinId, yeniDurum).GetAwaiter().GetResult();
+        public void IzinSil(int izinId) => IzinSilAsync(izinId).GetAwaiter().GetResult();
+
+        // ---- ASYNC (UI bununla donmaz) ----
+        public async Task IzinEkleAsync(Izin izin)
         {
-            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            using (MySqlConnection conn = _baglanti.BaglantiGetir(false))
             {
-                string sql = @"
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                const string sql = @"
 INSERT INTO leave_requests
 (personel_id, baslangic, bitis, izin_turu, aciklama, durum)
 VALUES
@@ -22,6 +34,8 @@ VALUES
 
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
+                    cmd.CommandTimeout = 30;
+
                     cmd.Parameters.AddWithValue("@pid", izin.PersonelId);
                     cmd.Parameters.AddWithValue("@bas", izin.BaslangicTarihi);
                     cmd.Parameters.AddWithValue("@bit", izin.BitisTarihi);
@@ -29,19 +43,21 @@ VALUES
                     cmd.Parameters.AddWithValue("@acik", (object)izin.Aciklama ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@durum", string.IsNullOrWhiteSpace(izin.Durum) ? "Beklemede" : izin.Durum);
 
-                    cmd.ExecuteNonQuery();
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        // 2) PERSONELE AİT İZİNLER
-        public List<Izin> PersonelinIzinleri(int personelId)
+        public async Task<List<Izin>> PersonelinIzinleriAsync(int personelId)
         {
             var liste = new List<Izin>();
 
-            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            using (MySqlConnection conn = _baglanti.BaglantiGetir(false))
             {
-                string sql = @"
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                const string sql = @"
 SELECT id, personel_id, baslangic, bitis, izin_turu, aciklama, durum
 FROM leave_requests
 WHERE personel_id = @pid
@@ -49,11 +65,12 @@ ORDER BY id DESC;";
 
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
+                    cmd.CommandTimeout = 30;
                     cmd.Parameters.AddWithValue("@pid", personelId);
 
-                    using (var dr = cmd.ExecuteReader())
+                    using (var dr = await cmd.ExecuteReaderAsync())
                     {
-                        while (dr.Read())
+                        while (await dr.ReadAsync())
                         {
                             liste.Add(new Izin
                             {
@@ -61,9 +78,9 @@ ORDER BY id DESC;";
                                 PersonelId = Convert.ToInt32(dr["personel_id"]),
                                 BaslangicTarihi = Convert.ToDateTime(dr["baslangic"]),
                                 BitisTarihi = Convert.ToDateTime(dr["bitis"]),
-                                IzinTuru = dr["izin_turu"].ToString(),
-                                Aciklama = dr["aciklama"] == DBNull.Value ? null : dr["aciklama"].ToString(),
-                                Durum = dr["durum"] == DBNull.Value ? "Beklemede" : dr["durum"].ToString()
+                                IzinTuru = Convert.ToString(dr["izin_turu"]) ?? "",
+                                Aciklama = dr["aciklama"] == DBNull.Value ? null : Convert.ToString(dr["aciklama"]),
+                                Durum = dr["durum"] == DBNull.Value ? "Beklemede" : (Convert.ToString(dr["durum"]) ?? "Beklemede")
                             });
                         }
                     }
@@ -73,33 +90,39 @@ ORDER BY id DESC;";
             return liste;
         }
 
-        // 3) TÜM İZİNLER (IK / Admin ekranı için)
-        public List<Izin> TumIzinler()
+        public async Task<List<Izin>> TumIzinlerAsync()
         {
             var liste = new List<Izin>();
 
-            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            using (MySqlConnection conn = _baglanti.BaglantiGetir(false))
             {
-                string sql = @"
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                const string sql = @"
 SELECT id, personel_id, baslangic, bitis, izin_turu, aciklama, durum
 FROM leave_requests
 ORDER BY id DESC;";
 
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-                using (var dr = cmd.ExecuteReader())
                 {
-                    while (dr.Read())
+                    cmd.CommandTimeout = 30;
+
+                    using (var dr = await cmd.ExecuteReaderAsync())
                     {
-                        liste.Add(new Izin
+                        while (await dr.ReadAsync())
                         {
-                            Id = Convert.ToInt32(dr["id"]),
-                            PersonelId = Convert.ToInt32(dr["personel_id"]),
-                            BaslangicTarihi = Convert.ToDateTime(dr["baslangic"]),
-                            BitisTarihi = Convert.ToDateTime(dr["bitis"]),
-                            IzinTuru = dr["izin_turu"].ToString(),
-                            Aciklama = dr["aciklama"] == DBNull.Value ? null : dr["aciklama"].ToString(),
-                            Durum = dr["durum"] == DBNull.Value ? "Beklemede" : dr["durum"].ToString()
-                        });
+                            liste.Add(new Izin
+                            {
+                                Id = Convert.ToInt32(dr["id"]),
+                                PersonelId = Convert.ToInt32(dr["personel_id"]),
+                                BaslangicTarihi = Convert.ToDateTime(dr["baslangic"]),
+                                BitisTarihi = Convert.ToDateTime(dr["bitis"]),
+                                IzinTuru = Convert.ToString(dr["izin_turu"]) ?? "",
+                                Aciklama = dr["aciklama"] == DBNull.Value ? null : Convert.ToString(dr["aciklama"]),
+                                Durum = dr["durum"] == DBNull.Value ? "Beklemede" : (Convert.ToString(dr["durum"]) ?? "Beklemede")
+                            });
+                        }
                     }
                 }
             }
@@ -107,35 +130,43 @@ ORDER BY id DESC;";
             return liste;
         }
 
-        // 4) DURUM GÜNCELLE (Onayla / Reddet)
-        public void DurumGuncelle(int izinId, string yeniDurum)
+        public async Task DurumGuncelleAsync(int izinId, string yeniDurum)
         {
-            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            using (MySqlConnection conn = _baglanti.BaglantiGetir(false))
             {
-                string sql = @"UPDATE leave_requests SET durum=@d WHERE id=@id;";
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                const string sql = @"UPDATE leave_requests SET durum=@d WHERE id=@id;";
+
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
+                    cmd.CommandTimeout = 30;
                     cmd.Parameters.AddWithValue("@d", yeniDurum);
                     cmd.Parameters.AddWithValue("@id", izinId);
-                    cmd.ExecuteNonQuery();
+
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        // 5) İZİN SİL (İstersen)
-        public void IzinSil(int izinId)
+        public async Task IzinSilAsync(int izinId)
         {
-            using (MySqlConnection conn = _baglanti.BaglantiGetir())
+            using (MySqlConnection conn = _baglanti.BaglantiGetir(false))
             {
-                string sql = @"DELETE FROM leave_requests WHERE id=@id;";
+                if (conn.State != ConnectionState.Open)
+                    await conn.OpenAsync();
+
+                const string sql = @"DELETE FROM leave_requests WHERE id=@id;";
+
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
+                    cmd.CommandTimeout = 30;
                     cmd.Parameters.AddWithValue("@id", izinId);
-                    cmd.ExecuteNonQuery();
+
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
     }
 }
-
-

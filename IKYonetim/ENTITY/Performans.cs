@@ -13,10 +13,10 @@ namespace IKYonetim.ENTITY
         public int Id { get; set; }
         public int PersonelId { get; set; }
 
-        public int Puan { get; set; }          // 1–100
+        public int Puan { get; set; }          
         public string Aciklama { get; set; }
 
         public DateTime DegerlendirmeTarihi { get; set; }
-        public int DegerlendirenId { get; set; } // IK / Admin
+        public int DegerlendirenId { get; set; } 
     }
 }
